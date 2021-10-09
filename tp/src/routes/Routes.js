@@ -6,6 +6,7 @@ import Home from '../pages/Home';
 import Estudios from '../pages/Estudios';
 
 
+
 export default function Routes() {
     return (
         <Switch>
@@ -17,6 +18,7 @@ export default function Routes() {
                 <Estudios/>
 
             </Route>
+            
         </Switch>
     )
 }

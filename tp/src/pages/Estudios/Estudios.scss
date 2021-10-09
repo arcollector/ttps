@@ -1,8 +1,9 @@
 @import '../../scss/index.scss';
 
 .estudios-content{
-  display: flex;
   
+  float:left;
+  background-color: #E6E6EA;
   width: 100%;
    overflow: hidden;
   .contenedor-tarjeta{
@@ -10,16 +11,19 @@
     align-items:center;
     width:30%;
     height:400px;
-    flex:auto;
-
-
+    
+    float:left;
+    
+    margin-top: 50px;
+    margin-bottom: 30px;
 
     .card{
      
       align-items: center;
       margin: 60px;
       height:100%;
-      flex:auto;
+      float:left;
+      
 
       .header{
         text-align: center;

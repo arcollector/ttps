@@ -1,17 +1,20 @@
 const puppeteer= require('puppeteer');
 
-//const webURL="https://www.promiedos.com.ar/"; 
+
 
 const optionsPDF="";
 
 
-async function puppeteerPDF(webURL, optionsPDF){
+async function puppeteerPDF(webURL, optionsPDF, paciente){
     const browser= await puppeteer.launch({
         headless:true,
         args:['--no-sandbox', '--disable-setupid-sandbox']
     })
 
     const coverpage= await browser.newPage();
+    await coverpage.setExtraHTTPHeaders(
+        {'paciente': paciente},
+      );
     await coverpage.goto(webURL, {waitUntil:'domcontentloaded'});
 
     const pdfBuffer=await coverpage.pdf({
@@ -26,7 +29,8 @@ async function puppeteerPDF(webURL, optionsPDF){
 async function createPDF(req,res){
     console.log(req.query.webURL);
     const webURL= req.query.webURL;
-    await puppeteerPDF(webURL, optionsPDF).then(pdfData=>{
+    const paciente=req.query.paciente;
+    await puppeteerPDF(webURL, optionsPDF, paciente).then(pdfData=>{
         res.set('Content-Type', 'application/pdf');
         res.status(201).send(Buffer.from(pdfData,'binary'));
     }).catch((error)=>{

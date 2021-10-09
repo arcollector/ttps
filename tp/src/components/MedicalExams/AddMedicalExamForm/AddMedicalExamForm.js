@@ -40,6 +40,8 @@ export default function AddMedicalExamForm(props) {
     const [prices, setPrices] = useState(null);
     const [doctorSelected, setDoctorSelected] = useState("");
 
+    
+
     useEffect(() => {
         const refDocPrices= db.collection("pricesMedicExams");
         refDocPrices.get().then(doc=>{
@@ -106,6 +108,8 @@ export default function AddMedicalExamForm(props) {
                     .then((res)=>{
                         toast.success("El archivo se subio correctamente");
                         let id=uuidv4();
+                        let  today = new Date(),
+                        date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
                         db.collection("medicExams").add({
                             id:id,
                             idPatient:paciente.id,
@@ -118,6 +122,10 @@ export default function AddMedicalExamForm(props) {
                             cariotipoSelected:seleccionado["cariotipo"],
                             arraySelected:seleccionado["array"],
                             price:presupuesto,
+                            fechaCompleta:date,
+                            day:today.getDay(),
+                            month:today.getMonth(),
+                            year:today.getFullYear(),
 
 
                         }).then(()=>{
@@ -150,7 +158,7 @@ export default function AddMedicalExamForm(props) {
     const MyDocument=async()=>{
         console.log('entre');
         try{
-            pdfService.downloadPDF("https://www.iteramos.com/pregunta/19644/como-acceder-a-los-parametros-get-en-expressjs-o-nodejs").then((res)=>{
+            pdfService.downloadPDF(`http://localhost:8080/pdf/informe?usuario=${paciente.nombre}`, paciente).then((res)=>{
 
                 //var file = new File([myBlob], "name");
                 

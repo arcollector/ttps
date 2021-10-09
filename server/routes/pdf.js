@@ -9,6 +9,7 @@ router.get("/", async(req,res)=>{
 
 router.get("/getpdf", async(req,res)=>{
     console.log(req.query.webURL);
+    console.log(req.query.paciente);
     console.log("estoy en el servidor!!!")
     try{
         res.header("Access-Control-Allow-Origin", "http://localhost:3000");
