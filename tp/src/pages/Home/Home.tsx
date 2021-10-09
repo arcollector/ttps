@@ -2,6 +2,9 @@ import React from 'react';
 
 export function Home() {
   return (
-    <h1>Vamos react</h1>
+    <div>
+      <h1>Home</h1>
+      <p>Esto es home</p>
+    </div>
   );
 }
