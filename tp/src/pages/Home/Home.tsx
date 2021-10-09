@@ -5,6 +5,10 @@ export function Home() {
     <div>
       <h1>Home</h1>
       <p>Esto es home</p>
+      <p>Esto es home</p>
+      <p>Esto es home</p>
+      <p>Esto es home</p>
+      <p>Esto es home</p>
     </div>
   );
 }
