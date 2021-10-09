@@ -1,0 +1,39 @@
+@import '../../scss/index.scss';
+
+.estudios-content{
+  display: flex;
+  
+  width: 100%;
+   overflow: hidden;
+  .contenedor-tarjeta{
+    display:flex;
+    align-items:center;
+    width:30%;
+    height:400px;
+    flex:auto;
+
+
+
+    .card{
+     
+      align-items: center;
+      margin: 60px;
+      height:100%;
+      flex:auto;
+
+      .header{
+        text-align: center;
+        margin:20px;
+      }
+    }
+
+
+  }
+    
+}
+.ui.button{
+    background-color: $primary-color;
+    color:white;
+    border-radius: 10px;
+    width:100%;
+}
