@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-
+//import { v4 as uuidv4 } from 'uuid';
 
 import firebase from '../../utils/Firebase';
 
@@ -32,6 +32,7 @@ export default function Estudios() {
                     const data=docActual.data();
                     data.id=docActual.id;
                     arrayExams.push(data);
+                    return{}
                 })
                
                 setExams(arrayExams);
@@ -57,6 +58,7 @@ export default function Estudios() {
                     
                     data.id=docActual.id;
                     arrayDoctors[data.id]=`${data.nombre} ${data.apellido}`;
+                    return {}
                     
                 })
                 setDoctors(arrayDoctors);
@@ -83,6 +85,7 @@ export default function Estudios() {
                     data.id=docActual.id;
                     data.nombreCompleto=`${data.nombre} ${data.apellido}`;
                     arrayPatients[data.id]=data;
+                    return {}
                     
                 })
                 setPatients(arrayPatients);
@@ -113,16 +116,16 @@ export default function Estudios() {
                     <div className="content">
                         <h4 className="ui sub header">Estudios</h4>
                         <ol className="ui list">
-                           {exam.arraySelected=="true"&&( <li value="*">Array</li>)}
-                           {exam.genomaSelected=="true"&&( <li value="*">Genoma</li>)}
-                           {exam.cariotipoSelected=="true"&&( <li value="*">Cariotipo</li>)}
-                           {exam.exomaSelected=="true"&&( <li value="*">Exoma</li>)}
-                           {exam.carrierSelected=="true"&&( <li value="*">Carrier</li>)}
+                           {exam.arraySelected==="true"&&( <li value="*" key="array">Array</li>)}
+                           {exam.genomaSelected==="true"&&( <li value="*"key="genoma">Genoma</li>)}
+                           {exam.cariotipoSelected==="true"&&( <li value="*" key="cariotipo">Cariotipo</li>)}
+                           {exam.exomaSelected==="true"&&( <li value="*" key="exoma">Exoma</li>)}
+                           {exam.carrierSelected==="true"&&( <li value="*" key="carrier">Carrier</li>)}
                             
                         </ol>
                         <h4 className="ui sub header">Medico Derivante:</h4>
                         <ol className="ui list">
-                            {doctors && <li value="*">{doctors[exam.idMedic]}</li>}
+                            {doctors && <li key="medic" value="*">{doctors[exam.idMedic]}</li>}
                         </ol>
                         
                         

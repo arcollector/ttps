@@ -41,14 +41,16 @@
 	    display: flex;
         width:100%;
         
-
         .field{
             
-            width:50%;
-            margin-right: 15px;
-            align-items: center;
+            
+                width:50% !important;
+                margin-right: 15px !important;
+                align-items: center !important;
+                
             
         }
+        
     }
 
     .header-section{

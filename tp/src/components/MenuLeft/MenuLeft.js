@@ -3,7 +3,7 @@ import './MenuLeft.scss';
 import {Menu, Icon} from 'semantic-ui-react';
 import {Link, withRouter} from 'react-router-dom';
 
-import {isUserAdmin} from '../../utils/Api';
+//import {isUserAdmin} from '../../utils/Api';
 import BasicModal from '../Modal/BasicModal/BasicModal';
 import AddMedicalExamForm from '../MedicalExams/AddMedicalExamForm';
 import AddPatientForm from '../Patient/AddPatientForm';
@@ -12,23 +12,23 @@ import AddPatientForm from '../Patient/AddPatientForm';
 
     const {user, location}= props;
     const [activeMenu, setActiveMenu] = useState(location.pathname);
-    const [userAdmin, setUserAdmin] = useState(false);
+   // const [userAdmin, setUserAdmin] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [titleModal, setTitleModal] = useState(null);
     const [contentModal, setContentModal] = useState(null);
 
 
-    useEffect(() => {
+    // useEffect(() => {
         
-        isUserAdmin(user.uid).then((response)=>{
-            setUserAdmin(response);
-        }).catch(err=>{
-            console.log(err);
-        });
-        return () => {
+    //     isUserAdmin(user.uid).then((response)=>{
+    //         setUserAdmin(response);
+    //     }).catch(err=>{
+    //         console.log(err);
+    //     });
+    //     return () => {
             
-        }
-    }, [user.uid])
+    //     }
+    // }, [user.uid])
 
     useEffect(() => {
         setActiveMenu(location.pathname);
@@ -56,6 +56,7 @@ import AddPatientForm from '../Patient/AddPatientForm';
                 setContentModal(<AddMedicalExamForm user={user} setShowModal={setShowModal}/>);
                 setShowModal(true);
                 break;
+            
         
             default:
                 setTitleModal(null);
@@ -89,6 +90,15 @@ import AddPatientForm from '../Patient/AddPatientForm';
                         onClick={handlerMenu}
                     >
                         <Icon name="file outline"/> Estudios
+                    </Menu.Item>
+
+                    <Menu.Item 
+                        as={Link} 
+                        to="/turnos"
+                        active={activeMenu==="/turnos"} 
+                        onClick={handlerMenu}
+                    >
+                        <Icon name="calendar alternate outline"/> Turnos
                     </Menu.Item>
 
                     <div className="footer">

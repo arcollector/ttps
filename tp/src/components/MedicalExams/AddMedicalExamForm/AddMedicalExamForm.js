@@ -52,6 +52,7 @@ export default function AddMedicalExamForm(props) {
                     const data=docActual.data();
                     data.id=docActual.id;
                     arrayPrices[data.exam]=data.price;
+                    return {}
                 })
                
                 setPrices(arrayPrices);
@@ -77,6 +78,7 @@ export default function AddMedicalExamForm(props) {
                     
                     data.id=docActual.id;
                     arrayDoctors.push(data);
+                    return {}
                 })
                 setDoctors(arrayDoctors);
                
