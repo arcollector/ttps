@@ -3,6 +3,7 @@ import { Switch, Route } from 'react-router-dom';
 
 import { AppointmentsSchedule }  from '../../../Appointments';
 import { MedicalExams } from '../../../MedicalExams';
+import { Patients } from '../../../Patients';
 
 export function Routes() {
     return (
@@ -12,8 +13,12 @@ export function Routes() {
             </Route>
 
             <Route path="/turnos" exact>
-                <AppointmentsSchedule/>
+                <AppointmentsSchedule />
+            </Route>
+
+            <Route path="/pacientes" exact>
+                <Patients />
             </Route>
         </Switch>
-    )
+    );
 }

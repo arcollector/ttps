@@ -1,6 +1,6 @@
 import firebase from 'firebase/compat/app';
-
-
+import 'firebase/compat/storage';
+import 'firebase/compat/firestore';
 
 const firebaseConfig = {
   apiKey: "AIzaSyCLjW-3g5O6-TzefgKjqc6Mqh9TOg-fJvo",
@@ -10,6 +10,8 @@ const firebaseConfig = {
   messagingSenderId: "1079198003514",
   appId: "1:1079198003514:web:ca590dc26660ef36dce003",
   measurementId: "G-HLH6HGVFEB"
-  };
+};
 
-  export default firebase.initializeApp(firebaseConfig);
+export default firebase.initializeApp(firebaseConfig);
+
+export const db = firebase.firestore(firebase);

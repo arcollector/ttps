@@ -101,6 +101,16 @@ export function SideBarImpl(props) {
                         <Icon name="calendar alternate outline"/> Turnos
                     </Menu.Item>
 
+                    <Menu.Item 
+                        as={Link} 
+                        to="/pacientes"
+                        active={activeMenu==="/pacientes"} 
+                        onClick={handlerMenu}
+                    >
+                        <Icon name="user outline"/>
+                        Pacientes
+                    </Menu.Item>
+
                     <div className="footer">
                     <Menu.Item as={Link} to="/crearestudio" onClick={()=>handlerModal("estudio")}>
                         <Icon name="plus square outline"/> Crear Nuevo Estudio

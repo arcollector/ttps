@@ -8,13 +8,9 @@ import { SideBar } from '../Host/components/SideBar';
 import { TopBar } from '../Host/components/TopBar';
 
 export function Host(props) {
-
     const {user}= props;
-
-
     return (
         <Router>
-
             <Grid className="logged-layout">
                 <Grid.Row>
                     <Grid.Column width={3}>
@@ -25,12 +21,9 @@ export function Host(props) {
                             user={user}
                         />
                         <Routes/>
-
                     </Grid.Column>
                 </Grid.Row>
-
             </Grid>
-
         </Router>
-    )
+    );
 }

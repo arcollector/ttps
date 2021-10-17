@@ -9,9 +9,7 @@ import twix from 'twix';
 import moment from 'moment';
 
 //BASE DE DATOS
-import firebase from '../../shared/utils/Firebase';
-import 'firebase/compat/storage';
-import 'firebase/compat/firestore';
+import { db } from '../../shared/utils/Firebase';
 
 //SCSS
 import '../styles/AppointmentNewForm.scss'
@@ -25,8 +23,6 @@ moment.locale('es');
 const now= moment().minutes(0).seconds(0).add(1,'hours');
 // const nowPlus1=now.clone().add(1,'hours');
 // const nowPlus7=now.clone().add(7,'hours');
-
-const db= firebase.firestore(firebase);
 
 
 export function AppointmentNewForm(props) {
