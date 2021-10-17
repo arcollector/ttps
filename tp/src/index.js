@@ -1,13 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.scss';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
+
+import App from './App';
+
 import 'react-toastify/dist/ReactToastify.css';
+import './index.scss';
+
 ReactDOM.render(
-  
-    <App />
-  ,
+  <App />,
   document.getElementById('root')
 );
 

@@ -1,10 +1,8 @@
 import React, {useState} from 'react';
-import firebase from './utils/Firebase';
+import firebase from './shared/utils/Firebase';
 import 'firebase/compat/auth';
-import Auth from './pages/Auth';
 import { ToastContainer } from 'react-toastify';
-import LoggedLayout from './layouts/LoggedLayout/LoggedLayout';
-
+import { Authenticated, Guest } from './Navigation';
 
 function App() {
 
@@ -31,8 +29,11 @@ function App() {
   
   return (
     <>
-       {!user ? <Auth/> : <LoggedLayout user={user}/>}
-       <ToastContainer
+      {!user
+        ? <Guest />
+        : <Authenticated user={user}/>
+      }
+      <ToastContainer
         position="top-center"
         autoClose={3000}
         hideProgressBar
@@ -41,7 +42,7 @@ function App() {
         rtl={false}
         draggable
         pauseOnHover={false}
-       />
+      />
     </>
   );
 }
