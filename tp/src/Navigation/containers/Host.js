@@ -1,13 +1,13 @@
 import React from 'react';
-import '../Authenticated/styles/Authenticated.scss';
+import '../Host/styles/Authenticated.scss';
 
 import {Grid} from 'semantic-ui-react';
-import { Routes } from '../Authenticated/components/Routes';
+import { Routes } from '../Host/components/Routes';
 import { BrowserRouter as Router} from 'react-router-dom';
-import { SideBar } from '../Authenticated/components/SideBar';
-import { TopBar } from '../Authenticated/components/TopBar';
+import { SideBar } from '../Host/components/SideBar';
+import { TopBar } from '../Host/components/TopBar';
 
-export function Authenticated(props) {
+export function Host(props) {
 
     const {user}= props;
 

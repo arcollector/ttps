@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import firebase from './shared/utils/Firebase';
 import 'firebase/compat/auth';
 import { ToastContainer } from 'react-toastify';
-import { Authenticated, Guest } from './Navigation';
+import { Navigation } from './Navigation';
 
 function App() {
 
@@ -30,8 +30,8 @@ function App() {
   return (
     <>
       {!user
-        ? <Guest />
-        : <Authenticated user={user}/>
+        ? <Navigation.Guest />
+        : <Navigation.Host user={user}/>
       }
       <ToastContainer
         position="top-center"

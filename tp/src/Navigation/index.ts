@@ -1,2 +1,7 @@
-export { Authenticated } from './containers/Authenticated';
-export { Guest } from './containers/Guest';
+import { Host } from './containers/Host';
+import { Guest } from './containers/Guest';
+
+export const Navigation = {
+  Host,
+  Guest,
+};
