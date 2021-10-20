@@ -1,24 +1,33 @@
 import React from 'react';
+import { Menu, Icon } from 'semantic-ui-react';
+import { Link } from 'react-router-dom';
+
 import { db } from '../../shared/utils/Firebase';
 
 type Patient = {
+  id: string,
   nomsoc: string,
-  code: string,
   email: string,
   numsoc: string,
   telefono: string,
   nombre: string,
   apellido: string,
   dni: string,
+  fecnac: string,
 };
 
-export function Patients() {
+export function List() {
   const [ patients, setPatients ] = React.useState<Patient[]>([]);
   React.useEffect(() => {
     const items: Patient[] = [];
     db.collection('patients').get().then((doc) => {
       if (!doc.empty) {
-        doc.docs.forEach((doc) => items.push(doc.data() as Patient));
+        doc.docs.forEach((doc) => {
+          items.push({
+            ...doc.data() as Patient,
+            id: doc.id,
+          });
+        });
         setPatients(items);
       }
     }).catch((e) => {
@@ -37,6 +46,7 @@ export function Patients() {
               <th>Telefono</th>
               <th>Email</th>
               <th>Obra social</th>
+              <th>Acciones</th>
             </tr>
           </thead>
         <tbody>
@@ -56,6 +66,14 @@ export function Patients() {
               </td>
               <td data-label="email">
                 {patient.nomsoc} {patient.numsoc}
+              </td>
+              <td>
+                <Menu.Item 
+                  as={Link} 
+                  to={`/pacientes/${patient.id}`}
+                >
+                  <Icon name="eye"/>
+                </Menu.Item>
               </td>
             </tr>
           )}

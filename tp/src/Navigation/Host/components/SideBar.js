@@ -6,7 +6,7 @@ import {Link, withRouter} from 'react-router-dom';
 //import {isUserAdmin} from '../../utils/Api';
 import { Modal } from '../../../shared/components/Modal';
 import { MedicalExamNewForm } from '../../../MedicalExams';
-import { PatientsNewForm } from '../../../Patients';
+import { Patients } from '../../../Patients';
 
 export function SideBarImpl(props) {
 
@@ -48,7 +48,7 @@ export function SideBarImpl(props) {
         switch (type) {
             case "paciente":
                 setTitleModal("Nuevo Paciente");
-                setContentModal(<PatientsNewForm  user={user} setShowModal={setShowModal}/>);
+                setContentModal(<Patients.NewForm  user={user} setShowModal={setShowModal}/>);
                 setShowModal(true);
                 break;
             case "estudio":

@@ -1,4 +1,3 @@
-import React from 'react'
 import { Switch, Route } from 'react-router-dom';
 
 import { AppointmentsSchedule }  from '../../../Appointments';
@@ -17,7 +16,10 @@ export function Routes() {
             </Route>
 
             <Route path="/pacientes" exact>
-                <Patients />
+                <Patients.List />
+            </Route>
+            <Route path="/pacientes/:id" exact>
+                <Patients.Single />
             </Route>
         </Switch>
     );

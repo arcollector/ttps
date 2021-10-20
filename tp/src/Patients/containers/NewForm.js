@@ -10,7 +10,7 @@ import 'firebase/compat/firestore';
 
 const db= firebase.firestore(firebase);
 
-export function PatientsNewForm(props) {
+export function NewForm(props) {
 
 
     const {setShowModal}=props;
