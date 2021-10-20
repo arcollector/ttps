@@ -7,6 +7,7 @@ type Props = {
   placeholder: string,
   type: string,
   onChange: (name: string, value: string) => any,
+  value: string,
 };
 
 export function FormInput(props: Props) {
@@ -22,6 +23,7 @@ export function FormInput(props: Props) {
         placeholder={props.placeholder}
         onChange={onChange}
         type={props.type}
+        value={props.value}
       />
     </Form.Field>
   );

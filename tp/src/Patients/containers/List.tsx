@@ -2,19 +2,8 @@ import React from 'react';
 import { Menu, Icon } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 
+import { Patient } from '../interfaces/types';
 import { db } from '../../shared/utils/Firebase';
-
-type Patient = {
-  id: string,
-  nomsoc: string,
-  email: string,
-  numsoc: string,
-  telefono: string,
-  nombre: string,
-  apellido: string,
-  dni: string,
-  fecnac: string,
-};
 
 export function List() {
   const [ patients, setPatients ] = React.useState<Patient[]>([]);

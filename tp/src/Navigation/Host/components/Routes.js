@@ -18,6 +18,9 @@ export function Routes() {
             <Route path="/pacientes" exact>
                 <Patients.List />
             </Route>
+            <Route path="/pacientes/crear" exact>
+                <Patients.Create />
+            </Route>
             <Route path="/pacientes/:id" exact>
                 <Patients.Single />
             </Route>

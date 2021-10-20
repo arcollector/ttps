@@ -66,23 +66,19 @@ export function SideBarImpl(props) {
         }
     }
 
-
     return (
-
-        <> 
-        
-        
-        
+        <>
             <Menu className="menu-left" vertical>
                 <div className="top">
                     <Menu.Item 
-                    as={Link} 
-                    to="/"
-                    active={activeMenu==="/"} 
-                    onClick={handlerMenu}
+                        as={Link} 
+                        to="/"
+                        active={activeMenu==="/"} 
+                        onClick={handlerMenu}
                     >
                         <Icon name="home"/> Inicio
                     </Menu.Item>
+
                     <Menu.Item 
                         as={Link} 
                         to="/estudios"
@@ -111,22 +107,25 @@ export function SideBarImpl(props) {
                         Pacientes
                     </Menu.Item>
 
-                    <div className="footer">
-                    <Menu.Item as={Link} to="/crearestudio" onClick={()=>handlerModal("estudio")}>
-                        <Icon name="plus square outline"/> Crear Nuevo Estudio
+                    <Menu.Item
+                        as={Link}
+                        to="/crearestudio"
+                        onClick={()=>handlerModal("estudio")}
+                    >
+                        <Icon name="plus square outline"/>
+                        Crear Nuevo Estudio
                     </Menu.Item>
 
-                    <Menu.Item as={Link} to="/agregarpaciente" onClick={()=>handlerModal("paciente")}>
-                        <Icon name="plus square outline"/> Agregar Nuevo Paciente
+                    <Menu.Item
+                        as={Link}
+                        to="/pacientes/crear"
+                    >
+                        <Icon name="plus square outline"/>
+                        Agregar Nuevo Paciente
                     </Menu.Item>
-                    
-                    </div>
-
                 </div>
-                
-                
-
             </Menu>
+
             <Modal
                 show={showModal}
                 setShow={setShowModal}
@@ -135,9 +134,7 @@ export function SideBarImpl(props) {
                 {contentModal}
             </Modal>
         </>
-        
-    )
+    );
 }
-
 
 export const SideBar = withRouter(SideBarImpl);
