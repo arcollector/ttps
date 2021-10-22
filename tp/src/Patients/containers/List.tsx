@@ -1,20 +1,16 @@
 import React from 'react';
 import { Menu, Icon } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
-import {toast} from 'react-toastify';
 
 import { Patient } from '../interfaces/types';
-import { Crud } from '../../shared/firebase';
+import * as actions from '../actions';
 
 export function List() {
   const [ patients, setPatients ] = React.useState<Patient[]>([]);
   React.useEffect(() => {
-    Crud
-      .getAllAsItems<Patient>('patients')
-      .then(setPatients)
-      .catch(() => {
-        toast.error('Error al obtener el listado pacientes');
-      });
+    (async () => {
+      setPatients(await actions.getAllPatients());
+    })();    
   }, []);
 
   return (

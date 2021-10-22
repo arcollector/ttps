@@ -4,7 +4,7 @@ import {toast} from 'react-toastify';
 import { useHistory } from 'react-router-dom';
 
 import { Patient } from '../interfaces';
-import { PatientsService } from '../services';
+import * as actions from '../actions'
 
 export function Create() {
   const history = useHistory();
@@ -20,24 +20,13 @@ export function Create() {
     setIsLoading(false);
   };
 
-  const onSubmit = React.useCallback((formData: Patient) => {
+  const onSubmit = React.useCallback(async (formData: Patient) => {
     setIsLoading(true);
-    PatientsService
-      .create(formData)
-      .then((success) => {
-        if (success) {
-          toast.success('El paciente fue cargado correctamente');
-          history.replace('/pacientes');
-        } else {
-          toast.error('Ya existe un paciente con el mismo dni');
-        }
-      })
-      .catch(() => {
-        toast.error('Error al crear el paciente');
-      })
-      .finally(() => {
-        setIsLoading(false); 
-      });
+    const success = await actions.createPatient(formData);
+    if (success) {
+      history.replace('/pacientes');
+    }
+    setIsLoading(false); 
   }, [history]);
 
   return (

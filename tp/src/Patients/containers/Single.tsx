@@ -5,7 +5,7 @@ import { useParams, useHistory } from 'react-router-dom';
 
 import { Form } from '../components/Form';
 import { Patient, emptyPatient } from '../interfaces/types';
-import { PatientsService } from '../services';
+import * as actions from '../actions';
 
 export function Single() {
   const history = useHistory();
@@ -14,11 +14,9 @@ export function Single() {
   const [ patient, setPatient ] = React.useState<Patient>(emptyPatient);
 
   React.useEffect(() => {
-    PatientsService.getAsItem(patientId)
-      .then(setPatient)
-      .catch(() => {
-        toast.error(`no se pudo obtener los datos del paciente ${patientId}`);
-      });
+    (async () => {
+      setPatient(await actions.getPatient(patientId));
+    })();
   }, [patientId]);
 
   const [ isLoadingForUpdate, setIsLoadingForUpdate ] = React.useState(false);
@@ -33,21 +31,10 @@ export function Single() {
     toast.warning(error);
   };
 
-  const onUpdate = (values: Patient) => {
+  const onUpdate = async (values: Patient) => {
     setIsLoadingForUpdate(true);
-    PatientsService
-      .update(patientId, values)
-      .then((success) => {
-        if (success) {
-          toast.success('Los datos han sido actualizados correctamente');
-        }
-      })
-      .catch(() => {
-        toast.error(`No se pudo actualizar el paciente ${patientId}`);
-      })
-      .finally(() => {
-        setIsLoadingForUpdate(false);
-      });
+    await actions.updatePatient(patientId, values);
+    setIsLoadingForUpdate(false);
   };
 
   const [ isDeleteMode, setIsDeleteMode ] = React.useState(false);
@@ -55,24 +42,11 @@ export function Single() {
     setIsDeleteMode(true);
   };
 
-  const onConfirmDelete = React.useCallback(() => {
+  const onConfirmDelete = React.useCallback(async () => {
     setIsLoadingForDelete(true);
-    PatientsService
-      .remove(patientId)
-      .then((success) => {
-        if (success) {
-          toast.success('Paciente eliminado con exito');
-          history.replace('/pacientes');
-        } else {
-          toast.error(`Fallo el borrado del paciente ${patientId}. Sera por que tiene examenes medicos asociados?`);
-        }
-      })
-      .catch(() => {
-        toast.error(`No se pudo obtener los datos del paciente ${patientId} para su borrado`);
-      })
-      .finally(() => {
-        setIsLoadingForDelete(false);
-      });
+    await actions.removePatient(patientId);
+    history.replace('/pacientes');
+    setIsLoadingForDelete(false);
   }, [patientId]);
 
   const onCancelDelete = () => {

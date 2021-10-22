@@ -5,70 +5,42 @@ type MedicExam = {};
 
 export class PatientsService {
 
-  public static existsDni(dni: string): Promise<boolean> {
-    return new Promise((resolve) => {
-      Crud
-        .getAllBy<Patient>('patients', ['dni', dni])
-        .then((items) => {
-          resolve(items.length !== 0);
-        });
-    });
+  public static async getAllAsItems(): Promise<Patient[]> {
+    return await Crud.getAllAsItems<Patient>('patients');
   }
 
-  public static create(formData: Patient): Promise<boolean> {
-    return new Promise((resolve) => {
-      return PatientsService
-        .existsDni(formData.dni)
-        .then((existsDni) => {
-          if (!existsDni) {
-            Crud
-              .create('patients', formData)
-              .then(() => resolve(true))
-          } else {
-            resolve(false);
-          }
-        });
-    });
+  public static async existsDni(dni: string): Promise<boolean> {
+    const items = await Crud.getAllBy<Patient>('patients', ['dni', dni])
+    return items.length !== 0;
   }
 
-  public static update(patientId: string, formData: Patient): Promise<boolean> {
-    return new Promise((resolve) => {
-      Crud
-      .getAsDoc('patients', patientId)
-      .then((doc) => {
-        Crud.update(doc, formData)
-          .then(() => {
-            resolve(true);
-          });
-      })
-    });
+  public static async create(formData: Patient): Promise<boolean> {
+    const existsDni = await PatientsService.existsDni(formData.dni);
+    if (!existsDni) {
+      await Crud.create('patients', formData);
+      return true;
+    }
+    return false;
   }
 
-  public static getAsItem(patientId: string): Promise<Patient> {
-    return new Promise((resolve) => {
-      Crud.getAsItem<Patient>('patients', patientId)
-        .then(resolve)
-    });
+  public static async update(patientId: string, formData: Patient): Promise<boolean> {
+    const doc = await Crud.getAsDoc('patients', patientId);
+    await Crud.update(doc, formData);
+    return true;
   }
 
-  public static remove(patientId: string): Promise<boolean> {
-    return new Promise((resolve) => {
-      Crud
-        .getAllBy<MedicExam>('medicExams', ['idPatient', patientId])
-        .then((items) => {
-          if (items.length !== 0) {
-            resolve(false);
-          } else {
-            Crud
-            .getAsDoc('patients', patientId)
-            .then((doc) => {
-              Crud
-                .delete(doc)
-                .then(() => resolve(true))
-            });
-          }
-        });
-    });
+  public static async getAsItem(patientId: string): Promise<Patient> {
+    return await Crud.getAsItem<Patient>('patients', patientId);
+  }
+
+  public static async remove(patientId: string): Promise<boolean> {
+    const items = await Crud.getAllBy<MedicExam>('medicExams', ['idPatient', patientId]);
+    if (items.length !== 0) {
+      return false;
+    }
+    const doc = await Crud.getAsDoc('patients', patientId);
+    await Crud.delete(doc);
+    return true;
   }
 
 }
