@@ -1,17 +1,14 @@
 import React from 'react';
 import { Form } from '../components/Form';
 import {toast} from 'react-toastify';
+import { useHistory } from 'react-router-dom';
 
-import { Patient } from '../interfaces/types';
-import { db } from '../../shared/utils/Firebase';
-
-function createPatient(formData: Patient) {
-  return db
-    .collection('patients')
-    .add(formData);
-}
+import { Patient } from '../interfaces';
+import { PatientsService } from '../services';
 
 export function Create() {
+  const history = useHistory();
+
   const [ isLoading, setIsLoading ] = React.useState(false);
 
   const onPreSubmit = () => {
@@ -23,20 +20,25 @@ export function Create() {
     setIsLoading(false);
   };
 
-  const onSubmit = (formData: Patient) => {
+  const onSubmit = React.useCallback((formData: Patient) => {
     setIsLoading(true);
-    createPatient(formData)
-      .then(() => {
-        toast.success('El paciente fue cargado correctamente');
+    PatientsService
+      .create(formData)
+      .then((success) => {
+        if (success) {
+          toast.success('El paciente fue cargado correctamente');
+          history.replace('/pacientes');
+        } else {
+          toast.error('Ya existe un paciente con el mismo dni');
+        }
       })
-      .catch((error) => {
-        console.log(error);
-        toast.error('Error al guardar el paciente');
+      .catch(() => {
+        toast.error('Error al crear el paciente');
       })
       .finally(() => {
         setIsLoading(false); 
       });
-  }
+  }, [history]);
 
   return (
     <div className="ui segment">

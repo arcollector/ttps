@@ -1,26 +1,10 @@
 import React from 'react';
 import * as SemanticUi from 'semantic-ui-react';
+import {toast} from 'react-toastify';
 
 import { FormInput } from '../components/FormInput';
 import { Patient, emptyPatient } from '../interfaces/types';
 import { validateEmail } from '../../shared/utils/Validations';
-import { db } from '../../shared/utils/Firebase';
-
-function validateDni(dni: Patient['dni']): Promise<void> {
-  return new Promise((resolve, reject) => {
-    db
-      .collection('patients')
-      .where('dni', '==', dni)
-      .get()
-      .then((doc) => {
-        if (!doc.empty) {
-          reject();
-        } else {
-          resolve();
-        }
-      });
-  });
-}
 
 type Props = {
   values?: Patient,
@@ -29,6 +13,7 @@ type Props = {
   onSubmit: (values: Patient) => any,
   isLoading: boolean,
   buttonText: string,
+  disableDni?: boolean,
 };
 
 export function Form(props: Props) {
@@ -47,13 +32,13 @@ export function Form(props: Props) {
   const onSubmit = React.useCallback(() => {
     props.onPreSubmit();
 
-    if (Object.keys(formData).length !== 8) {
+    // 9 fields because we are counting the id field
+    if (Object.keys(formData).length !== 9) {
       props.onSubmitError('Debe completar todos los datos');
       return;
     }
 
     const {
-      dni,
       email,
     } = formData;
 
@@ -64,13 +49,7 @@ export function Form(props: Props) {
 
     // TODO validate all fields
 
-    validateDni(dni)
-      .then(() => {
-        props.onSubmit(formData);
-      })
-      .catch(() => {
-        props.onSubmitError('Ya existe un paciente con el mismo dni');
-      });
+    props.onSubmit(formData);
   }, [
     formData,
     props.onPreSubmit,
@@ -107,6 +86,7 @@ export function Form(props: Props) {
         type="number"
         onChange={onChange}
         value={formData.dni}
+        disabled={props.disableDni}
       />
 
       <FormInput

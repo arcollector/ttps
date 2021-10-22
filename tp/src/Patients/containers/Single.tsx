@@ -3,43 +3,9 @@ import { Button } from 'semantic-ui-react';
 import {toast} from 'react-toastify';
 import { useParams, useHistory } from 'react-router-dom';
 
-import firebase from 'firebase/compat/app';
 import { Form } from '../components/Form';
 import { Patient, emptyPatient } from '../interfaces/types';
-import { db } from '../../shared/utils/Firebase';
-
-function getPatient(id: Patient['id']):
-  Promise<firebase.firestore.DocumentSnapshot<firebase.firestore.DocumentData>>
-{
-  return new Promise((resolve, reject) => {
-    db
-      .collection('patients')
-      .doc(id)
-      .get()
-      .then((doc) => {
-        if (!doc.exists) {
-          reject('Paciente no existe');
-        } else {
-          resolve(doc);
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-        reject(`Fallo la obtencion del paciente ${id}`);
-      });
-  });
-}
-
-function updatePatient(formData: Patient) {
-  return db
-    .collection('patients')
-    .doc(formData.id)
-    .get();
-}
-
-function removePatient(id: Patient['id']) {
-  getPatient(id);
-}
+import { PatientsService } from '../services';
 
 export function Single() {
   const history = useHistory();
@@ -48,15 +14,12 @@ export function Single() {
   const [ patient, setPatient ] = React.useState<Patient>(emptyPatient);
 
   React.useEffect(() => {
-    getPatient(patientId)
-      .then((doc) => {
-        setPatient(doc.data() as Patient);
-      })
-      .catch((error) => {
-        toast.error(error);
+    PatientsService.getAsItem(patientId)
+      .then(setPatient)
+      .catch(() => {
+        toast.error(`no se pudo obtener los datos del paciente ${patientId}`);
       });
   }, [patientId]);
-
 
   const [ isLoadingForUpdate, setIsLoadingForUpdate ] = React.useState(false);
   const [ isLoadingForDelete, setIsLoadingForDelete ] = React.useState(false);
@@ -72,24 +35,17 @@ export function Single() {
 
   const onUpdate = (values: Patient) => {
     setIsLoadingForUpdate(true);
-    getPatient(patientId)
-      .then((doc) => {
-        doc
-          .ref
-          .set(values)
-          .then(() => {
-            toast.success('Los datos han sido actualizados correctamente');
-          })
-          .catch((error) => {
-            console.log(error);
-            toast.error('No se pudo editar los datos del paciente');
-          })
-          .finally(() => {
-            setIsLoadingForUpdate(false);
-          });
+    PatientsService
+      .update(patientId, values)
+      .then((success) => {
+        if (success) {
+          toast.success('Los datos han sido actualizados correctamente');
+        }
       })
-      .catch((error) => {
-        toast.error(error);
+      .catch(() => {
+        toast.error(`No se pudo actualizar el paciente ${patientId}`);
+      })
+      .finally(() => {
         setIsLoadingForUpdate(false);
       });
   };
@@ -99,31 +55,25 @@ export function Single() {
     setIsDeleteMode(true);
   };
 
-  const onConfirmDelete = () => {
+  const onConfirmDelete = React.useCallback(() => {
     setIsLoadingForDelete(true);
-    getPatient(patientId)
-      .then((doc) => {
-        // TODO no se puede borrar un paciente con estudio ya realizados
-        doc
-          .ref
-          .delete()
-          .then(() => {
-            toast.success('Paciente eliminado con exito');
-            history.replace('/pacientes');
-          })
-          .catch((error) => {
-            console.error(error);
-            toast.error(`Fallo el borrado del paciente ${patientId}`);
-          })
-          .finally(() => {
-            setIsLoadingForDelete(false);
-          });
+    PatientsService
+      .remove(patientId)
+      .then((success) => {
+        if (success) {
+          toast.success('Paciente eliminado con exito');
+          history.replace('/pacientes');
+        } else {
+          toast.error(`Fallo el borrado del paciente ${patientId}. Sera por que tiene examenes medicos asociados?`);
+        }
       })
-      .catch((error) => {
-        toast.error(error);
+      .catch(() => {
+        toast.error(`No se pudo obtener los datos del paciente ${patientId} para su borrado`);
+      })
+      .finally(() => {
         setIsLoadingForDelete(false);
       });
-  };
+  }, [patientId]);
 
   const onCancelDelete = () => {
     setIsDeleteMode(false);
@@ -140,6 +90,7 @@ export function Single() {
         onSubmit={onUpdate}
         isLoading={isLoadingForUpdate}
         buttonText="Editar paciente"
+        disableDni
       />
 
       <hr />

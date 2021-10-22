@@ -8,6 +8,7 @@ type Props = {
   type: string,
   onChange: (name: string, value: string) => any,
   value: string,
+  disabled?: boolean,
 };
 
 export function FormInput(props: Props) {
@@ -24,6 +25,7 @@ export function FormInput(props: Props) {
         onChange={onChange}
         type={props.type}
         value={props.value}
+        disabled={props.disabled}
       />
     </Form.Field>
   );

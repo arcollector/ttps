@@ -1,27 +1,20 @@
 import React from 'react';
 import { Menu, Icon } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
+import {toast} from 'react-toastify';
 
 import { Patient } from '../interfaces/types';
-import { db } from '../../shared/utils/Firebase';
+import { Crud } from '../../shared/firebase';
 
 export function List() {
   const [ patients, setPatients ] = React.useState<Patient[]>([]);
   React.useEffect(() => {
-    const items: Patient[] = [];
-    db.collection('patients').get().then((doc) => {
-      if (!doc.empty) {
-        doc.docs.forEach((doc) => {
-          items.push({
-            ...doc.data() as Patient,
-            id: doc.id,
-          });
-        });
-        setPatients(items);
-      }
-    }).catch((e) => {
-      console.error(e);
-    });
+    Crud
+      .getAllAsItems<Patient>('patients')
+      .then(setPatients)
+      .catch(() => {
+        toast.error('Error al obtener el listado pacientes');
+      });
   }, []);
 
   return (
@@ -44,8 +37,8 @@ export function List() {
               <td data-label="nombre completo">
                 {patient.nombre} {patient.apellido}
               </td>
-              <td data-label="email">
-                {patient.email}
+              <td data-label="dni">
+                {patient.dni}
               </td>
               <td data-label="telefono">
                 {patient.telefono}
