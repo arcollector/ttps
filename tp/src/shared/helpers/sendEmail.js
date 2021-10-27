@@ -4,7 +4,7 @@ export function sendEmail(email, subject, html) {
   sgMail.setApiKey(process.env.SENDGRID_API_KEY); // Update the development environment with your SENDGRID_API_KEY
   const msg = {
     to: email,
-    from: 'juancruzalmazan1994@gmail.com', // Verified sendgrid email, change it to grupo11unlp@gmail.com in the future
+    from: 'grupo11unlp@gmail.com', // Verified sendgrid email
     subject: subject,
     html: html,
   };
