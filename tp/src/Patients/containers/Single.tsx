@@ -22,13 +22,7 @@ export function Single() {
   const [ isLoadingForUpdate, setIsLoadingForUpdate ] = React.useState(false);
   const [ isLoadingForDelete, setIsLoadingForDelete ] = React.useState(false);
 
-  const onPreUpdate = () => {
-    setIsLoadingForUpdate(true);
-  };
-
-  const onUpdateError = (error?: string) => {
-    setIsLoadingForUpdate(false);
-    toast.warning(error);
+  const onUpdateError = (errors: string[]) => {
   };
 
   const onUpdate = async (values: Patient) => {
@@ -59,7 +53,6 @@ export function Single() {
 
       <Form
         values={patient}
-        onPreSubmit={onPreUpdate}
         onSubmitError={onUpdateError}
         onSubmit={onUpdate}
         isLoading={isLoadingForUpdate}

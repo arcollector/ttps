@@ -1,5 +1,6 @@
 import React from 'react';
 import { Form } from '../components/Form';
+import { Message, Header, List, ListItem } from 'semantic-ui-react'
 import {toast} from 'react-toastify';
 import { useHistory } from 'react-router-dom';
 
@@ -10,14 +11,10 @@ export function Create() {
   const history = useHistory();
 
   const [ isLoading, setIsLoading ] = React.useState(false);
+  const [ errors, setErrros ] = React.useState<string[]>([]);
 
-  const onPreSubmit = () => {
-    setIsLoading(true);
-  };
-
-  const onSubmitError = (error?: string) => {
-    toast.warning(error);
-    setIsLoading(false);
+  const onSubmitError = (errors: string[]) => {
+    setErrros(errors);
   };
 
   const onSubmit = React.useCallback(async (formData: Patient) => {
@@ -35,8 +32,18 @@ export function Create() {
         Crear paciente
       </h1>
 
+      <Message negative>
+        <Header>No se pudo crear el paciente</Header>
+        <List>
+        {errors.map((error, i) => 
+          <ListItem key={i}>
+            {error}
+          </ListItem>
+        )}
+        </List>
+      </Message>
+
       <Form
-        onPreSubmit={onPreSubmit}
         onSubmitError={onSubmitError}
         onSubmit={onSubmit}
         isLoading={isLoading}

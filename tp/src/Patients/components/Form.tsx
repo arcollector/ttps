@@ -1,15 +1,15 @@
 import React from 'react';
 import * as SemanticUi from 'semantic-ui-react';
 import {toast} from 'react-toastify';
+import * as yup from 'yup';
 
 import { FormInput } from '../components/FormInput';
 import { Patient, emptyPatient } from '../interfaces/types';
-import { validateEmail } from '../../shared/utils/Validations';
+import { validators, schema } from '../interfaces';
 
 type Props = {
   values?: Patient,
-  onPreSubmit: () => any,
-  onSubmitError: (error?: string) => any,
+  onSubmitError: (errors: string[]) => any,
   onSubmit: (values: Patient) => any,
   isLoading: boolean,
   buttonText: string,
@@ -29,36 +29,23 @@ export function Form(props: Props) {
     setFormData((v) => ({ ...v, [name]: value }));
   };
 
-  const onSubmit = React.useCallback(() => {
-    props.onPreSubmit();
-
-    // 9 fields because we are counting the id field
-    if (Object.keys(formData).length !== 9) {
-      props.onSubmitError('Debe completar todos los datos');
+  const onSubmit = React.useCallback(async () => {
+    try {
+      await schema.validate(formData, { abortEarly: false });
+      props.onSubmit(formData);
+    } catch (e) {
+      props.onSubmitError((e as yup.ValidationError).errors);
       return;
     }
-
-    const {
-      email,
-    } = formData;
-
-    if (!validateEmail(email)) {
-      props.onSubmitError('Ingrese una direccion de correo valida');
-      return;
-    }
-
-    // TODO validate all fields
-
-    props.onSubmit(formData);
   }, [
     formData,
-    props.onPreSubmit,
     props.onSubmitError,
     props.onSubmit
   ]);
 
   return (
     <SemanticUi.Form
+      data-testid="form"
       onSubmit={onSubmit}
     >
       <FormInput
@@ -68,6 +55,8 @@ export function Form(props: Props) {
         type="text"
         onChange={onChange}
         value={formData.nombre}
+        validator={validators.nombre}
+        required
       />
 
       <FormInput
@@ -77,6 +66,8 @@ export function Form(props: Props) {
         type="text"
         onChange={onChange}
         value={formData.apellido}
+        validator={validators.apellido}
+        required
       />
 
       <FormInput
@@ -87,6 +78,8 @@ export function Form(props: Props) {
         onChange={onChange}
         value={formData.dni}
         disabled={props.disableDni}
+        validator={validators.dni}
+        required
       />
 
       <FormInput
@@ -96,6 +89,8 @@ export function Form(props: Props) {
         type="text"
         onChange={onChange}
         value={formData.fecnac}
+        validator={validators.fecnac}
+        required
       />
 
       <FormInput
@@ -105,6 +100,8 @@ export function Form(props: Props) {
         type="number"
         onChange={onChange}
         value={formData.telefono}
+        validator={validators.telefono}
+        required
       />
 
       <FormInput
@@ -114,6 +111,8 @@ export function Form(props: Props) {
         type="email"
         onChange={onChange}
         value={formData.email}
+        validator={validators.email}
+        required
       />
 
       <FormInput
@@ -123,6 +122,7 @@ export function Form(props: Props) {
         type="text"
         onChange={onChange}
         value={formData.nomsoc}
+        validator={validators.nomsoc}
       />
 
       <FormInput
@@ -132,6 +132,7 @@ export function Form(props: Props) {
         type="text"
         onChange={onChange}
         value={formData.numsoc}
+        validator={validators.numsoc}
       />
 
       <SemanticUi.Button
