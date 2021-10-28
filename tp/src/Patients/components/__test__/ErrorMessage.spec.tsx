@@ -1,6 +1,5 @@
 import React from 'react';
 import * as Testing from '@testing-library/react'
-import * as yup from 'yup';
 
 import { ErrorMessage } from '../ErrorMessage';
 
