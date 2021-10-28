@@ -1,5 +1,5 @@
 import React from 'react';
-import { Menu, Icon } from 'semantic-ui-react';
+import { Menu, Icon, Button } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 
 import { Patient } from '../interfaces/types';
@@ -42,16 +42,19 @@ export function List() {
               <td data-label="email">
                 {patient.email}
               </td>
-              <td data-label="email">
+              <td data-label="obra social">
                 {patient.nomsoc} {patient.numsoc}
               </td>
-              <td>
-                <Menu.Item 
-                  as={Link} 
+              <td data-label="acciones">
+                <Button
+                  as={Link}
+                  primary
+                  size="mini"
                   to={`/pacientes/${patient.id}`}
                 >
-                  <Icon name="eye"/>
-                </Menu.Item>
+                  <Icon name="eye" />
+                  Ver ficha
+                </Button>
               </td>
             </tr>
           )}
