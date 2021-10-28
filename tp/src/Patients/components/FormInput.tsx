@@ -18,10 +18,10 @@ export function FormInput(props: Props) {
   const [ isError, setIsError ] = React.useState(false);
   const [ errorsMessage, setErrorsMessage ] = React.useState<string[]>([]);
   
-  const onChange = React.useCallback(async (_, data: InputOnChangeData) => {
+  const onChange = React.useCallback((_, data: InputOnChangeData) => {
     if (props.validator) {
       try {
-        await props.validator.validate(data.value);
+        props.validator.validateSync(data.value);
         setIsError(false);
         setErrorsMessage([]);
       } catch (e) {
@@ -34,6 +34,7 @@ export function FormInput(props: Props) {
 
   return (
     <Form.Field
+      data-testid={props.name}
       error={isError}
       required={props.required}
       style={{ minHeight: 80 }}

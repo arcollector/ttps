@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from 'semantic-ui-react';
-import {toast} from 'react-toastify';
+import { ErrorMessage } from '../components/ErrorMessage';
 import { useParams, useHistory } from 'react-router-dom';
 
 import { Form } from '../components/Form';
@@ -21,8 +21,10 @@ export function Single() {
 
   const [ isLoadingForUpdate, setIsLoadingForUpdate ] = React.useState(false);
   const [ isLoadingForDelete, setIsLoadingForDelete ] = React.useState(false);
+  const [ errors, setErrros ] = React.useState<string[]>([]);
 
   const onUpdateError = (errors: string[]) => {
+    setErrros(errors);
   };
 
   const onUpdate = async (values: Patient) => {
@@ -51,6 +53,11 @@ export function Single() {
     <div className="ui segment">
       <h1>Datos del paciente</h1>
 
+      <ErrorMessage
+        heading="No se pudo editar los datos del paciente"
+        errors={errors}
+      />
+
       <Form
         values={patient}
         onSubmitError={onUpdateError}
@@ -73,8 +80,8 @@ export function Single() {
       }
 
       {isDeleteMode &&
-      <>
-        <h3>Esta seguro?</h3>
+      <div style={{ display: 'flex', flexDirection: 'row' }}>
+        <h3 style={{ marginRight: 50 }}>Esta seguro?</h3>
         <Button
           className="negative"
           type="button"
@@ -90,7 +97,7 @@ export function Single() {
         >
           No
         </Button>
-      </>
+      </div>
       }
     </div>
   );

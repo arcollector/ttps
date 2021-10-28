@@ -1,7 +1,6 @@
 import React from 'react';
 import { Form } from '../components/Form';
-import { Message, Header, List, ListItem } from 'semantic-ui-react'
-import {toast} from 'react-toastify';
+import { ErrorMessage } from '../components/ErrorMessage';
 import { useHistory } from 'react-router-dom';
 
 import { Patient } from '../interfaces';
@@ -32,16 +31,10 @@ export function Create() {
         Crear paciente
       </h1>
 
-      <Message negative>
-        <Header>No se pudo crear el paciente</Header>
-        <List>
-        {errors.map((error, i) => 
-          <ListItem key={i}>
-            {error}
-          </ListItem>
-        )}
-        </List>
-      </Message>
+      <ErrorMessage
+        heading="No se pudo crear el paciente"
+        errors={errors}
+      />
 
       <Form
         onSubmitError={onSubmitError}

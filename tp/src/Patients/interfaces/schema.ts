@@ -25,10 +25,12 @@ export const schema = yup.object().shape({
 
   nombre: yup
     .string()
+    .matches(/[a-zA-Z]+/, 'Nombre es invalido')
     .required('Nombre no puede estar vacio'),
 
   apellido: yup
     .string()
+    .matches(/[a-zA-Z]+/, 'Apellido es invalido')
     .required('Apellido no puede estar vacio'),
 
   dni: yup

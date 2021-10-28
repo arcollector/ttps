@@ -1,6 +1,5 @@
 import React from 'react';
 import * as SemanticUi from 'semantic-ui-react';
-import {toast} from 'react-toastify';
 import * as yup from 'yup';
 
 import { FormInput } from '../components/FormInput';
@@ -29,9 +28,12 @@ export function Form(props: Props) {
     setFormData((v) => ({ ...v, [name]: value }));
   };
 
-  const onSubmit = React.useCallback(async () => {
+  const onSubmit = React.useCallback(() => {
+    if (props.isLoading) {
+      return;
+    }
     try {
-      await schema.validate(formData, { abortEarly: false });
+      schema.validateSync(formData, { abortEarly: false });
       props.onSubmit(formData);
     } catch (e) {
       props.onSubmitError((e as yup.ValidationError).errors);
