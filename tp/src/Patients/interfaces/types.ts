@@ -8,6 +8,7 @@ export type Patient = {
   apellido: string,
   dni: string,
   fecnac: string,
+  historial: string,
 };
 
 export const emptyPatient: Patient = {
@@ -20,4 +21,5 @@ export const emptyPatient: Patient = {
   apellido: '',
   dni: '',
   fecnac: '',
+  historial: '',
 };

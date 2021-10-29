@@ -20,6 +20,7 @@ describe('<Single />', () => {
     apellido: 'Lopez',
     dni: '1222333',
     fecnac: '10/10/2010',
+    historial: '20/20 Stop code repetition please'
   };
 
   beforeEach(() => {

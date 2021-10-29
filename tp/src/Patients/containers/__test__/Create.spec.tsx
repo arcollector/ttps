@@ -28,6 +28,7 @@ describe('<Create />', () => {
       apellido: 'Lopez',
       dni: '1222333',
       fecnac: '10/10/2010',
+      historial: '20/20 Everything is bad',
     };
 
     function fillForm(role: string, name: string, value: string) {
@@ -60,6 +61,7 @@ describe('<Create />', () => {
       fillForm('textbox', 'Correo Electronico', patient.email);
       fillForm('textbox', 'Nombre de la obra social', patient.nomsoc);
       fillForm('textbox', 'Numero de la obra social', patient.numsoc);
+      fillForm('textbox', 'Historia clinica', patient.historial);
       Testing.fireEvent.submit(Testing.screen.getByRole('button', { name: 'Crear paciente' }));
       await Testing.waitFor(() => {
         expect(spyOnPatientCreate).toBeCalledWith(patient);

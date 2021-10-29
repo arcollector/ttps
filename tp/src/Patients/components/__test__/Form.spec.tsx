@@ -16,6 +16,7 @@ describe('<Form />', () => {
     apellido: 'Ruiz',
     dni: '33555999',
     fecnac: '10/10/2020',
+    historial: '20/20/2020 Dihariea',
   };
 
   function getInitialProps(
@@ -54,6 +55,7 @@ describe('<Form />', () => {
     fields.email && triggerChange('textbox', 'Correo Electronico', fields.email);
     fields.nomsoc && triggerChange('textbox', 'Nombre de la obra social', fields.nomsoc);
     fields.numsoc && triggerChange('textbox', 'Numero de la obra social', fields.numsoc);
+    fields.historial && triggerChange('textbox', 'Historia clinica', fields.historial);
   }
 
   describe('should mount initially using props.values as values for each form field', () => {
@@ -77,6 +79,7 @@ describe('<Form />', () => {
         { role: 'textbox', name: 'Correo Electronico', value: '' },
         { role: 'textbox', name: 'Nombre de la obra social', value: '' },
         { role: 'textbox', name: 'Numero de la obra social', value: '' },
+        { role: 'textbox', name: 'Historia clinica', value: '' },
       ]);
     });
 
@@ -92,6 +95,7 @@ describe('<Form />', () => {
         { role: 'textbox', name: 'Correo Electronico', value: goodPatientData.email },
         { role: 'textbox', name: 'Nombre de la obra social', value: goodPatientData.nomsoc },
         { role: 'textbox', name: 'Numero de la obra social', value: goodPatientData.numsoc },
+        { role: 'textbox', name: 'Historia clinica', value: goodPatientData.historial },
       ]);
     });
   });
@@ -170,6 +174,14 @@ describe('<Form />', () => {
         'telefono',
         [],
         ['0118451113']
+      );
+    });
+
+    test('should validate historial value', () => {
+      testFieldValidation(
+        'historial',
+        [],
+        ['20/20 Everything is fine']
       );
     });
   });

@@ -58,7 +58,11 @@ export const schema = yup.object().shape({
     .max(
       moment().toDate(),
       'Fecha de nacimiento no se encuentra en un rango valido'
-    )
+    ),
+
+  historial: yup
+    .string()
+    .required('La historia clinica no puede estar vacia')
 });
 
 export const validators = {
@@ -71,4 +75,5 @@ export const validators = {
   apellido: yup.reach(schema, 'apellido'),
   dni: yup.reach(schema, 'dni'),
   fecnac: yup.reach(schema, 'fecnac'),
+  historial: yup.reach(schema, 'historial'),
 };

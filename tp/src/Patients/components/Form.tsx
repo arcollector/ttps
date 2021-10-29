@@ -3,6 +3,7 @@ import * as SemanticUi from 'semantic-ui-react';
 import * as yup from 'yup';
 
 import { FormInput } from '../components/FormInput';
+import { FormTextArea } from './FormTextArea';
 import { Patient, emptyPatient } from '../interfaces/types';
 import { validators, schema } from '../interfaces';
 
@@ -135,6 +136,16 @@ export function Form(props: Props) {
         onChange={onChange}
         value={formData.numsoc}
         validator={validators.numsoc}
+      />
+
+      <FormTextArea
+        label="Historia clinica"
+        name="historial"
+        placeholder="Historia clinica del paciente"
+        onChange={onChange}
+        value={formData.historial}
+        validator={validators.historial}
+        required
       />
 
       <SemanticUi.Button
