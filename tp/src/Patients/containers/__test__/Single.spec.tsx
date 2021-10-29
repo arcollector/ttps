@@ -111,4 +111,13 @@ describe('<Single />', () => {
     });
   });
 
+  test('should dni field must be disable it cant be editted', async () => {
+    Testing.render(getComponentForTesting());
+    await Testing.waitFor(() => {
+      expect(spyOnGetPatient).toBeCalledTimes(1);
+    });
+    expect(
+      Testing.screen.getByRole('spinbutton', { name: 'DNI' })
+    ).toBeDisabled();
+  });
 });

@@ -181,4 +181,12 @@ describe('<Form />', () => {
     expect(props.onSubmit).toBeCalledTimes(0);
   });
 
+  test('should dni field disable if props.disableDni is true', () => {
+    const props = { ...getInitialProps(), disableDni: true };
+    Testing.render(getComponentForTesting(props));
+    expect(
+      Testing.screen.getByRole('spinbutton', { name: 'DNI' })
+    ).toBeDisabled();
+  });
+
 });
