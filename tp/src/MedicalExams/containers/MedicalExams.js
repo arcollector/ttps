@@ -157,9 +157,9 @@ export function MedicalExams() {
                 
                 return( 
                     <>
-                      {exams=="enviarPresupuesto" && <h3>Estudios que requieren enviar presupuesto</h3>}
-                      {exams=="enviarConsentimiento" && <h3>Estudios que requieren enviar consentimiento</h3>}
-                      {exams=="esperandoComprobante" && <h3>Estudios impagos</h3>}
+                      {exams==="enviarPresupuesto" && <h3>Estudios que requieren enviar presupuesto</h3>}
+                      {exams==="enviarConsentimiento" && <h3>Estudios que requieren enviar consentimiento</h3>}
+                      {exams==="esperandoComprobante" && <h3>Estudios impagos</h3>}
                       
 
                     <div class="section-state">
@@ -194,9 +194,9 @@ export function MedicalExams() {
                                                     
                                                 </div>
 
-                                                {exams=="enviarPresupuesto" && <button className="ui button">Enviar Presupuesto</button>}
-                                                {exams=="enviarConsentimiento" && <button className="ui button">Enviar Consentimiento</button>}
-                                                 {exams=="esperandoComprobante" && <button className="ui button">Subir comprobante</button>}
+                                                {exams==="enviarPresupuesto" && <button className="ui button">Enviar Presupuesto</button>}
+                                                {exams==="enviarConsentimiento" && <button className="ui button">Enviar Consentimiento</button>}
+                                                 {exams==="esperandoComprobante" && <button className="ui button">Subir comprobante</button>}
                                                 
                                         </div>
                                         
