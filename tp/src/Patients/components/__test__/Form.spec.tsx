@@ -2,22 +2,10 @@ import React from 'react';
 import * as Testing from '@testing-library/react'
 
 import { Patient, emptyPatient } from '../../interfaces';
+import { patient } from '../../__data__';
 import { Form } from '../Form';
 
 describe('<Form />', () => {
-
-  const goodPatientData: Patient = {
-    id: 'whatever',
-    nomsoc: 'IOMA',
-    email: 'martin.ruiz@yahoo.com',
-    numsoc: '1234456',
-    telefono: '5452842655',
-    nombre: 'Martin',
-    apellido: 'Ruiz',
-    dni: '33555999',
-    fecnac: '10/10/2020',
-    historial: '20/20/2020 Dihariea',
-  };
 
   function getInitialProps(
     onSubmit = jest.fn(),
@@ -85,17 +73,17 @@ describe('<Form />', () => {
 
     test('when props.values is defined all fields must be fill up', () => {
       const props = getInitialProps();
-      Testing.render(getComponentForTesting({ ...props, values: goodPatientData }));
+      Testing.render(getComponentForTesting({ ...props, values: patient }));
       testFormFields([
-        { role: 'textbox', name: 'Nombre', value: goodPatientData.nombre },
-        { role: 'textbox', name: 'Apellido', value: goodPatientData.apellido },
-        { role: 'spinbutton', name: 'DNI', value: goodPatientData.dni },
-        { role: 'textbox', name: 'Fecha de nacimiento (DD/MM/YYYY)', value: goodPatientData.fecnac },
-        { role: 'spinbutton', name: 'Telefono', value: goodPatientData.telefono },
-        { role: 'textbox', name: 'Correo Electronico', value: goodPatientData.email },
-        { role: 'textbox', name: 'Nombre de la obra social', value: goodPatientData.nomsoc },
-        { role: 'textbox', name: 'Numero de la obra social', value: goodPatientData.numsoc },
-        { role: 'textbox', name: 'Historia clinica', value: goodPatientData.historial },
+        { role: 'textbox', name: 'Nombre', value: patient.nombre },
+        { role: 'textbox', name: 'Apellido', value: patient.apellido },
+        { role: 'spinbutton', name: 'DNI', value: patient.dni },
+        { role: 'textbox', name: 'Fecha de nacimiento (DD/MM/YYYY)', value: patient.fecnac },
+        { role: 'spinbutton', name: 'Telefono', value: patient.telefono },
+        { role: 'textbox', name: 'Correo Electronico', value: patient.email },
+        { role: 'textbox', name: 'Nombre de la obra social', value: patient.nomsoc },
+        { role: 'textbox', name: 'Numero de la obra social', value: patient.numsoc },
+        { role: 'textbox', name: 'Historia clinica', value: patient.historial },
       ]);
     });
   });
@@ -113,7 +101,7 @@ describe('<Form />', () => {
     const props = getInitialProps();
     const { getByTestId } = Testing.render(getComponentForTesting(props));
     const formElem = getByTestId('form');
-    fillFormFields(goodPatientData);
+    fillFormFields(patient);
     Testing.fireEvent.submit(formElem);
     expect(props.onSubmitError).toBeCalledTimes(0);
     expect(props.onSubmit).toBeCalledTimes(1);

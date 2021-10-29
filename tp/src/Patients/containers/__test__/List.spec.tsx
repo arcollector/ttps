@@ -1,26 +1,11 @@
-import React from 'react';
 import * as Testing from '@testing-library/react'
-import * as RouterDom from 'react-router-dom';
 
 import * as actions from '../../actions';
-import { Patient } from '../interfaces/types';
+import { patient, patients } from '../../__data__';
 import { List } from '../List';
 
 describe('<List />', () => {
   let spyOnGetAllPatients: jest.SpyInstance<unknown, Parameters<typeof actions.getAllPatients>>;
-
-  const patient: Patient = {
-    id: '1234',
-    nomsoc: 'IOMA',
-    email: 'test@test.com',
-    numsoc: '12345',
-    telefono: '11554814',
-    nombre: 'Jorge',
-    apellido: 'Lopez',
-    dni: '1222333',
-    fecnac: '10/10/2010',
-  };
-  const patients: Patient[] = [ patient ];
 
   beforeEach(() => {
     spyOnGetAllPatients = jest.spyOn(actions, 'getAllPatients')

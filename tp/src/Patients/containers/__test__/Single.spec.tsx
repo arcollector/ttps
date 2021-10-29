@@ -1,27 +1,13 @@
-import React from 'react';
 import * as Testing from '@testing-library/react'
 import * as RouterDom from 'react-router-dom';
 
-import { Patient } from '../../interfaces';
+import { patient } from '../../__data__';
 import * as actions from '../../actions';
 import { Single } from '../Single';
 
 describe('<Single />', () => {
   let spyOnGetPatient: jest.SpyInstance<unknown, Parameters<typeof actions.getPatient>>;
   let spyOnUseParams: jest.SpyInstance<unknown, Parameters<typeof RouterDom.useParams>>;
-
-  const patient: Patient = {
-    id: '1234',
-    nomsoc: 'IOMA',
-    email: 'test@test.com',
-    numsoc: '12345',
-    telefono: '11554814',
-    nombre: 'Jorge',
-    apellido: 'Lopez',
-    dni: '1222333',
-    fecnac: '10/10/2010',
-    historial: '20/20 Stop code repetition please'
-  };
 
   beforeEach(() => {
     spyOnGetPatient = jest.spyOn(actions, 'getPatient')

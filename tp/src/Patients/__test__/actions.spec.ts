@@ -1,22 +1,10 @@
 import * as actions from '../actions';
 import { PatientsService } from '../services';
-import { Patient, emptyPatient } from '../interfaces';
+import { emptyPatient } from '../interfaces';
 import {toast} from 'react-toastify';
+import { patient, patients } from '../__data__';
 
 describe('patients actions', () => {
-
-  const patient: Patient = {
-    id: '123456',
-    nomsoc: 'IOMA',
-    email: 'test@test.com',
-    numsoc: '12345',
-    telefono: '11554814',
-    nombre: 'Jorge',
-    apellido: 'Lopez',
-    dni: '1222333',
-    fecnac: '10/10/2010',
-  };
-  const patients = [ patient ];
 
   let spyOnToastSuccess: jest.SpyInstance<unknown, Parameters<typeof toast.success>>;
   let spyOnToastError: jest.SpyInstance<unknown, Parameters<typeof toast.error>>;
