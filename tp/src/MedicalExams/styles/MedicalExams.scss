@@ -6,6 +6,22 @@
   background-color: #E6E6EA;
   width: 100%;
    overflow: hidden;
+   padding: 30px;
+
+   h3{
+     color:black;
+     text-align: center;
+     border-bottom: 1px solid black;
+   }
+  
+   .section-state{
+     display:flex;
+     align-items: center;
+     
+
+     
+     
+   }
   .contenedor-tarjeta{
     display:flex;
     align-items:center;

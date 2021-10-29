@@ -1,12 +1,25 @@
 @import '../../../shared/scss/index.scss';
 
+.three.wide.column{
+    background-color:#E6E6EA;
+}
+
+.ui.vertical.menu {
+    width: 100% !important;
+    padding-top: 22vh !important;
+    height: 100vh !important;
+
+;
+}
+
 .ui.vertical.menu-left{
     border-top: 10px $primary-color solid;
     display:flex;
     justify-content: space-between !important;
     border-radius: 0;
     background-color: $background-light;
-    height:100vh;
+    height:auto;
+    padding-top:400px;
     width:100%;
     padding-top: 50px;
     position: relative;
