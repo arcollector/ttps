@@ -1,5 +1,6 @@
 // require sendEmail
 const { sendEmail } = require('./emailSender');
+const ejs = require('ejs');
 
 // Send a bill to an email given
 export function sendConsent(email, consent) {
