@@ -17,6 +17,9 @@ import examen4 from '../assets/virus4.jpg'
 import examen5 from '../assets/virus5.jpg'
 
 
+import saveState from '../../shared/helpers/saveState';
+
+
 
 import '../styles/MedicalExamNewForm.scss';
 
@@ -26,9 +29,7 @@ export function MedicalExamNewForm(props) {
 
     const {setShowModal, user}= props;
 
-    
-
-    console.log(user);
+   
     
     const [presupuesto, setPresupuesto] = useState(0);
     const [formData, setFormData] = useState(initialValues());
@@ -39,6 +40,7 @@ export function MedicalExamNewForm(props) {
     const [doctors, setDoctors] = useState([]);
     const [prices, setPrices] = useState(null);
     const [doctorSelected, setDoctorSelected] = useState("");
+    const [state, setState] = useState("estado inicial");
 
     
 
@@ -102,48 +104,62 @@ export function MedicalExamNewForm(props) {
                     toast.warning("Se debe seleccionar un examen medico");
                 }else{
                     setIsLoading(true);
-                    await setFile(MyDocument());
-                    let fileName=uuidv4();
                     
-                    fileName=fileName+".pdf";
-                    uploadPdf(fileName)
-                    .then((res)=>{
-                        toast.success("El archivo se subio correctamente");
-                        let id=uuidv4();
+                        
+                        let estado="inicializado";
                         let  today = new Date(),
                         date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
-                        db.collection("medicExams").add({
-                            id:id,
-                            idPatient:paciente.id,
-                            idEmployee:user.uid,
-                            idMedic:doctorSelected,
-                            patology:formData.patologia,
-                            exomaSelected:seleccionado["exoma"],
-                            genomaSelected:seleccionado["genoma"],
-                            carrierSelected:seleccionado["carrier"],
-                            cariotipoSelected:seleccionado["cariotipo"],
-                            arraySelected:seleccionado["array"],
-                            price:presupuesto,
-                            fechaCompleta:date,
-                            day:today.getDay(),
-                            month:today.getMonth(),
-                            year:today.getFullYear(),
+                        
+                            
+                            db.collection("medicExams").add({
+                                
+                                idPatient:paciente.id,
+                                idEmployee:user.uid,
+                                idMedic:doctorSelected,
+                                patology:formData.patologia,
+                                exomaSelected:seleccionado["exoma"],
+                                genomaSelected:seleccionado["genoma"],
+                                carrierSelected:seleccionado["carrier"],
+                                cariotipoSelected:seleccionado["cariotipo"],
+                                arraySelected:seleccionado["array"],
+                                price:presupuesto,
+                                fechaCompleta:date,
+                                day:today.getDay(),
+                                month:today.getMonth(),
+                                year:today.getFullYear(),
+                                idState:"",
+    
+    
+                            }).then((e)=>{
+                                let idMedicExam=e.id;
+                                MyDocument(idMedicExam);
+                                saveState("enviarPresupuesto", user.displayName, idMedicExam).then(idState=>{
+                                    console.log(idMedicExam);
+                                    var refMedicExam = db.collection('medicExams').doc(idMedicExam);
+                                    refMedicExam.update({
+                                        idState:idState
+                                    })
+                                });
+                                toast.success("El estudio fue cargado correctamente");
+                            }).catch((error)=>{
+                                toast.error("Error al guardar el estudio");
+                                console.log(error);
+                            }).finally(()=>{
+                                console.log(state);
+                                setIsLoading(false);
+                                setFormData(initialValues());
+                                setShowModal(false);
+                            })
+    
 
 
-                        }).then(()=>{
-                            toast.success("El estudio fue cargado correctamente");
-                        }).catch((error)=>{
-                            toast.error("Error al guardar el estudio");
-                            console.log(error);
-                        }).finally(()=>{
-                            setIsLoading(false);
-                            setFormData(initialValues());
-                        })
+
+                      
+                        
 
 
-
-                        setShowModal(false);
-                    })
+                        
+                    
                 }
             }
         } 
@@ -157,15 +173,21 @@ export function MedicalExamNewForm(props) {
         return await ref.put(file, metadata);
     }
 
-    const MyDocument=async()=>{
-        console.log('entre');
+    const MyDocument=async(idMedicExam)=>{
+        
         try{
             pdfService.downloadPDF(`http://localhost:8080/pdf/informe?usuario=${paciente.nombre}`, paciente).then((res)=>{
 
                 //var file = new File([myBlob], "name");
-                
+                console.log(res);
                 const file= new Blob([res.data], {type:'application/pdf'});
                 //var file2 = new File([file], "holaname");
+
+                const metadata = {
+                    contentType: 'application/pdf',
+                  };
+                const ref= firebase.storage().ref().child(`presupuestosPdf/${idMedicExam}.pdf`);
+                ref.put(file, metadata);
                 
                 console.log(file);
                 const anchorLink= document.createElement('a');
@@ -174,6 +196,11 @@ export function MedicalExamNewForm(props) {
                 anchorLink.click();
                 let fd= new FormData();
                 fd.set('a', file);
+
+
+                
+
+
                 return fd.get('a');
                 //return file;
             })
@@ -284,6 +311,16 @@ export function MedicalExamNewForm(props) {
     const handlerDoctorSelected=(e)=>{
         setDoctorSelected(e.target.value);
         
+    }
+
+    async function handlerState(){
+        console.log("entre")
+        saveState("enviarPresupuesto", user).then(e=>{
+            console.log(e);
+            console.log("estoy en el then");
+        });
+       
+      
     }
     
 
@@ -422,7 +459,7 @@ export function MedicalExamNewForm(props) {
             </List>
             <h2>Presupuesto: {presupuesto}</h2>
             <Button type="submit" loading={isLoading}>Crear Estudio Medico</Button>
-            <Button onClick={MyDocument} >Descargar pdf</Button>
+            
         </Form>
     )
 }
