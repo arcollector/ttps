@@ -5,7 +5,6 @@ import {Form, Button, } from 'semantic-ui-react';
 import {toast} from 'react-toastify';
 import DatePicker from "react-widgets/DatePicker";
 import DropdownList from "react-widgets/DropdownList";
-import twix from 'twix';
 import moment from 'moment';
 
 //BASE DE DATOS

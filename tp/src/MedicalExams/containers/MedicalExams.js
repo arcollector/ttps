@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-//import { v4 as uuidv4 } from 'uuid';
+
 
 import firebase from '../../shared/utils/Firebase';
 
@@ -8,19 +8,29 @@ import 'firebase/compat/firestore';
 
 
 import '../styles/MedicalExams.scss';
+import EnviarPresupuesto from './EnviarPresupuesto';
+import SubirComprobante from './SubirComprobante';
+import EnviarConsentimiento from './EnviarConsentimiento';
+import SubirConsentimiento from './SubirConsentimiento';
+import ReservarTurno from './ReservarTurno';
+import TomarMuestra from './TomarMuestra';
+import RetirarMuestra from './RetirarMuestra';
 
 
 const db= firebase.firestore(firebase);
 
 
-export function MedicalExams() {
+export function MedicalExams(props) {
 
-
+    
+    const {user}= props;
+    
     const [exams, setExams] = useState(null);
     const [doctors, setDoctors] = useState(null);
     const [patients, setPatients] = useState(null);
     const [states, setStates] = useState([]);
     const [filterStates, setFilterStates] = useState(null);
+    const [reloading, setReloading] = useState(false);
 
 
 
@@ -85,7 +95,7 @@ export function MedicalExams() {
         return () => {
             
         }
-    }, [])
+    }, [reloading])
     
 
 
@@ -148,7 +158,7 @@ export function MedicalExams() {
 
 
  
-    
+    console.log(filterStates);
     return (
 
 
@@ -157,12 +167,17 @@ export function MedicalExams() {
                 
                 return( 
                     <>
-                      {exams==="enviarPresupuesto" && <h3>Estudios que requieren enviar presupuesto</h3>}
-                      {exams==="enviarConsentimiento" && <h3>Estudios que requieren enviar consentimiento</h3>}
-                      {exams==="esperandoComprobante" && <h3>Estudios impagos</h3>}
-                      
+                    
+                      {exams==="enviarPresupuesto" && filterStates[exams].length>0 && <h3>Estudios que requieren enviar presupuesto</h3>}
+                      {exams==="enviarConsentimiento" &&  filterStates[exams].length>0 && <h3>Estudios que requieren enviar consentimiento para su firma</h3>}
+                      {exams==="esperandoComprobante" &&  filterStates[exams].length>0 &&  <h3>Estudios impagos</h3>}
+                      {exams==="esperandoConsentimiento" &&  filterStates[exams].length>0 &&  <h3>Estudios que esperan recibir consentimiento firmado </h3>}
+                      {exams==="esperandoTurno" &&  filterStates[exams].length>0 && <h3>Estudios sin turno </h3>}
+                      {exams==="esperandoTomaDeMuestra" &&  filterStates[exams].length>0 && <h3>Estudios a la espera de la toma de muestra </h3>}
+                      {exams==="esperandoRetiroDeMuestra" &&  filterStates[exams].length>0 &&  <h3>Estudios a la espera del retiro de muestra </h3>}
+                      {exams==="esperandoLote" &&  filterStates[exams].length>0 &&  <h3>Estudios a la espera de lote de muestras </h3>}
 
-                    <div class="section-state">
+                    <div className="section-state">
 
                             
                         
@@ -193,10 +208,14 @@ export function MedicalExams() {
                                                     
                                                     
                                                 </div>
-
-                                                {exams==="enviarPresupuesto" && <button className="ui button">Enviar Presupuesto</button>}
-                                                {exams==="enviarConsentimiento" && <button className="ui button">Enviar Consentimiento</button>}
-                                                 {exams==="esperandoComprobante" && <button className="ui button">Subir comprobante</button>}
+     
+                                                {exams==="enviarPresupuesto" && <EnviarPresupuesto user={user} exam={exam} setReloading={setReloading}/>}
+                                                {exams==="enviarConsentimiento" && <EnviarConsentimiento  user={user} exam={exam} setReloading={setReloading} />}
+                                                {exams==="esperandoComprobante" && <SubirComprobante user={user} exam={exam} setReloading={setReloading}/>}
+                                                {exams==="esperandoConsentimiento" && <SubirConsentimiento user={user} exam={exam} setReloading={setReloading}/>}
+                                                {exams==="esperandoTurno" && <ReservarTurno user={user} exam={exam} setReloading={setReloading}/>}
+                                                {exams==="esperandoTomaDeMuestra" && <TomarMuestra user={user} exam={exam} setReloading={setReloading}/>}
+                                                {exams==="esperandoRetiroDeMuestra" && <RetirarMuestra user={user} exam={exam} setReloading={setReloading}/>}
                                                 
                                         </div>
                                         
@@ -214,3 +233,5 @@ export function MedicalExams() {
         </div>
     )
 }
+
+

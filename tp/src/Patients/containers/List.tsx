@@ -10,7 +10,7 @@ export function List() {
   React.useEffect(() => {
     (async () => {
       setPatients(await actions.getAllPatients());
-    })();    
+    })();
   }, []);
 
   return (

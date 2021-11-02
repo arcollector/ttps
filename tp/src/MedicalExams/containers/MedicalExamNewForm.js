@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import {Form, Input, Button, Image, List, Icon, TextArea} from 'semantic-ui-react';
 import {toast} from 'react-toastify';
-import { v4 as uuidv4 } from 'uuid';
 import firebase from '../../shared/utils/Firebase';
 import 'firebase/compat/storage';
 import 'firebase/compat/firestore';
@@ -35,12 +34,11 @@ export function MedicalExamNewForm(props) {
     const [formData, setFormData] = useState(initialValues());
     const [seleccionado, setSeleccionado] = useState(initialState());
     const [isLoading, setIsLoading] = useState(false);
-    const [file, setFile] = useState(null);
     const [paciente, setPaciente] = useState(null);
     const [doctors, setDoctors] = useState([]);
     const [prices, setPrices] = useState(null);
     const [doctorSelected, setDoctorSelected] = useState("");
-    const [state, setState] = useState("estado inicial");
+    
 
     
 
@@ -106,7 +104,7 @@ export function MedicalExamNewForm(props) {
                     setIsLoading(true);
                     
                         
-                        let estado="inicializado";
+                        
                         let  today = new Date(),
                         date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
                         
@@ -145,7 +143,7 @@ export function MedicalExamNewForm(props) {
                                 toast.error("Error al guardar el estudio");
                                 console.log(error);
                             }).finally(()=>{
-                                console.log(state);
+                                
                                 setIsLoading(false);
                                 setFormData(initialValues());
                                 setShowModal(false);
@@ -165,13 +163,13 @@ export function MedicalExamNewForm(props) {
         } 
     }
 
-    const uploadPdf=async(fileName)=>{
-        const metadata = {
-            contentType: 'application/pdf',
-          };
-        const ref= firebase.storage().ref().child(`estudiospdf/${fileName}`);
-        return await ref.put(file, metadata);
-    }
+    // const uploadPdf=async(fileName)=>{
+    //     const metadata = {
+    //         contentType: 'application/pdf',
+    //       };
+    //     const ref= firebase.storage().ref().child(`estudiospdf/${fileName}`);
+    //     return await ref.put(file, metadata);
+    // }
 
     const MyDocument=async(idMedicExam)=>{
         
@@ -313,15 +311,7 @@ export function MedicalExamNewForm(props) {
         
     }
 
-    async function handlerState(){
-        console.log("entre")
-        saveState("enviarPresupuesto", user).then(e=>{
-            console.log(e);
-            console.log("estoy en el then");
-        });
-       
-      
-    }
+ 
     
 
     return (

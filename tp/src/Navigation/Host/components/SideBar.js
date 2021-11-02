@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import '../styles/SideBar.scss';
 import {Menu, Icon} from 'semantic-ui-react';
-import {Link, withRouter} from 'react-router-dom';
+import {Link, withRouter, Router} from 'react-router-dom';
 
 //import {isUserAdmin} from '../../utils/Api';
 import { Modal } from '../../../shared/components/Modal';
@@ -81,11 +81,27 @@ export function SideBarImpl(props) {
 
                     <Menu.Item 
                         as={Link} 
-                        to="/estudios"
+                        to={{
+                            pathname: "/estudios",
+                            data: [user] // your data array of objects
+                          }}
                         active={activeMenu==="/estudios"} 
                         onClick={handlerMenu}
                     >
+                        
                         <Icon name="file outline"/> Estudios
+                    </Menu.Item>
+                    <Menu.Item 
+                        as={Link} 
+                        to={{
+                            pathname: "/lotes",
+                            data: [user] // your data array of objects
+                          }}
+                        active={activeMenu==="/lotes"} 
+                        onClick={handlerMenu}
+                    >
+                        
+                        <Icon name="archive"/> Lotes
                     </Menu.Item>
 
                     <Menu.Item 

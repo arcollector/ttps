@@ -20,7 +20,7 @@ export function Host(props) {
                         <TopBar
                             user={user}
                         />
-                        <Routes/>
+                        <Routes user={user}/>
                     </Grid.Column>
                 </Grid.Row>
             </Grid>
