@@ -111,40 +111,37 @@ export default function ReservarTurnoForm(props) {
                         
             setIsLoading(true);
                         
-                        db.collection("shifts").add({
-                            idMedicExam:exam.id,
-                            date:formData.date,
-                            hour:formData.hour,
-                            idPatient:exam.idPatient,
-    
-                        }).then(()=>{
+            db.collection("shifts").add({
+                idMedicExam:exam.id,
+                date:formData.date,
+                hour:formData.hour,
+                idPatient:exam.idPatient,
 
-                            saveState("esperandoTomaDeMuestra", user.displayName, exam.id).then(idState=>{
-                                console.log(exam.id);
-                                var refMedicExam = db.collection('medicExams').doc(exam.id);
-                                refMedicExam.update({
-                                    idState:idState
-                                }).then(() => {
-                                    setIsLoading(false);
-                                    setShowModal(false);
-                                    setReloading((v) => !v);
-                                    setReloadingShifts((v) => !v);
-                                });
-                            });
+            }).then(()=>{
 
+                return saveState("esperandoTomaDeMuestra", user.displayName, exam.id)
+            
+            }).then(idState=>{
+                console.log(exam.id);
+                var refMedicExam = db.collection('medicExams').doc(exam.id);
+                return refMedicExam.update({
+                    idState:idState
+                });
+                    
+            }).then(() => {
+                toast.success("El turno fue reservado")
+                let arrayReserved=reserved;
+                arrayReserved[formData.hour+formData.date]=true;
+                setReserved(arrayReserved);
+                setReloading((v) => !v);
 
-
-                            toast.success("El turno fue reservado")
-                            let arrayReserved=reserved;
-                            arrayReserved[formData.hour+formData.date]=true;
-                            setReserved(arrayReserved);
-                        }).catch(()=>{
-                            toast.error("Hubo un error en la reserva del turno. Vuelva a intentarlo")
-                        }).finally(() => {
-                            setIsLoading(false);
-                            setShowModal(false);
-                            setReloadingShifts((v) => !v);
-                        });
+            }).catch(()=>{
+                toast.error("Hubo un error en la reserva del turno. Vuelva a intentarlo")
+            }).finally(() => {
+                setIsLoading(false);
+                setShowModal(false);
+                setReloadingShifts((v) => !v);
+            });
         }
             
         
