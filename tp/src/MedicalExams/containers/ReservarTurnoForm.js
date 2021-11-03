@@ -124,7 +124,12 @@ export default function ReservarTurnoForm(props) {
                                 var refMedicExam = db.collection('medicExams').doc(exam.id);
                                 refMedicExam.update({
                                     idState:idState
-                                })
+                                }).then(() => {
+                                    setIsLoading(false);
+                                    setShowModal(false);
+                                    setReloading((v) => !v);
+                                    setReloadingShifts((v) => !v);
+                                });
                             });
 
 
@@ -135,14 +140,11 @@ export default function ReservarTurnoForm(props) {
                             setReserved(arrayReserved);
                         }).catch(()=>{
                             toast.error("Hubo un error en la reserva del turno. Vuelva a intentarlo")
-                        }).finally(()=>{
+                        }).finally(() => {
                             setIsLoading(false);
                             setShowModal(false);
-                            setReloading(false);
-                            setReloading(true);
-                            setReloadingShifts(false);
-                            setReloadingShifts(true);
-                        })
+                            setReloadingShifts((v) => !v);
+                        });
         }
             
         

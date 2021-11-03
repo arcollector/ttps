@@ -62,15 +62,19 @@ export default function RetirarMuestraForm(props) {
                         idMedicExam1:arrayStates[0].idMedicExam,
                         idMedicExam2:arrayStates[1].idMedicExam,
                     }).then(e=>{
-                        arrayStates.map(state=>{
-                            db.collection('medicExams').doc(state.idMedicExam).update({
-                                idLote:e.id
+                        Promise.all(
+                            arrayStates.map(state=>{
+                                return db
+                                    .collection('medicExams')
+                                    .doc(state.idMedicExam)
+                                    .update({
+                                        idLote:e.id
+                                    })
                             })
-                            return {}
-                        })
-                        setShowModal(false);
-                        setReloading(false);
-                        setReloading(true);
+                        ).then(() => {
+                            setShowModal(false);
+                            setReloading((v) => !v);
+                        });
                     })
                 };
             })

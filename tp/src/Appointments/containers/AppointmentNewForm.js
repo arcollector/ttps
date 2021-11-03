@@ -125,7 +125,7 @@ export function AppointmentNewForm(props) {
                         }).finally(()=>{
                             setIsLoading(false);
                             setShowModal(false);
-                            setReloading(true);
+                            setReloading((v) => !v);
                         })
                     }
             }

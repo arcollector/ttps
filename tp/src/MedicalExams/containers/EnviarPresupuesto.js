@@ -34,13 +34,13 @@ export default function EnviarPresupuesto(props) {
             var refMedicExam = db.collection('medicExams').doc(exam.id);
             refMedicExam.update({
                 idState:idState
-            })
+            }).then(() => {
+                setReloading((v) => !v);
+                toast.success("El presupuesto fue enviado");
+            });
         });
 
         
-        setReloading(false);
-        setReloading(true);
-        toast.success("El presupuesto fue enviado");
 
     }
 

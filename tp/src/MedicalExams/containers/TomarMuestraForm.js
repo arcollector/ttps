@@ -64,11 +64,12 @@ export default function TomarMuestraForm(props) {
                     var refMedicExam = db.collection('medicExams').doc(exam.id);
                     refMedicExam.update({
                         idState:idState
-                    })
+                    }).then(() => {
+                        setReloading((v) => !v);
+                        setShowModal(false);
+                    });
                 });
-                setReloading(false);
-                setReloading(true);
-                setShowModal(false);
+
             })
         }else{
             toast.success('Los datos ingresados son invalidos');

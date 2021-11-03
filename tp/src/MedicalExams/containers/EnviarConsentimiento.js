@@ -22,13 +22,12 @@ export default function EnviarConsentimiento(props) {
             var refMedicExam = db.collection('medicExams').doc(exam.id);
             refMedicExam.update({
                 idState:idState
-            })
+            }).then(() => {
+                setReloading((v) => !v);
+                toast.success("El consentimiento informado fue enviado");
+            });
         });
 
-        
-        setReloading(false);
-        setReloading(true);
-        toast.success("El consentimiento informado fue enviado");
 
     }
 

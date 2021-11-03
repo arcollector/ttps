@@ -62,11 +62,11 @@ export default function SubirComprobanteForm(props) {
                     var refMedicExam = db.collection('medicExams').doc(exam.id);
                     refMedicExam.update({
                         idState:idState
-                    })
-                    setIsLoading(false);
-                    setShowModal(false);
-                    setReloading(false);
-                    setReloading(true);
+                    }).then(() => {
+                        setIsLoading(false);
+                        setShowModal(false);
+                        setReloading((v) => !v);
+                    });
                 });
             })
         }
