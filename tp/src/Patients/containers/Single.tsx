@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from 'semantic-ui-react';
-import { ErrorMessage } from '../components/ErrorMessage';
+import { ErrorMessage } from '../../shared/components/ErrorMessage';
 import { useParams, useHistory } from 'react-router-dom';
 
 import { Form } from '../components/Form';

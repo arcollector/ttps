@@ -19,6 +19,7 @@ export const db = firebase.firestore(firebase as any);
 type Collection =
   | 'patients'
   | 'medicExams'
+  | 'insurers'
 
 export const Crud = {
 
@@ -125,11 +126,11 @@ export const Crud = {
     });
   },
 
-  getAllBy<T>(collection: Collection, tuple: [string, string]): Promise<T[]> {
+  getAllBy<T>(collection: Collection, tuple: [keyof T, string]): Promise<T[]> {
     return new Promise((resolve, reject) => {
       db
         .collection(collection)
-        .where(tuple[0], '==', tuple[1])
+        .where(tuple[0] as string, '==', tuple[1])
         .get()
         .then((doc) => {
           if (doc.empty) {

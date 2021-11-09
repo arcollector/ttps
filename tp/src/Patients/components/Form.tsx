@@ -2,8 +2,8 @@ import React from 'react';
 import * as SemanticUi from 'semantic-ui-react';
 import * as yup from 'yup';
 
-import { FormInput } from '../components/FormInput';
-import { FormTextArea } from './FormTextArea';
+import { FormInput } from '../../shared/components/FormInput';
+import { FormTextArea } from '../../shared/components/FormTextArea';
 import { Patient, emptyPatient } from '../interfaces/types';
 import { validators, schema } from '../interfaces';
 

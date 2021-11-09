@@ -1,7 +1,10 @@
 import { Crud } from '../../shared/firebase';
 import { Patient } from '../interfaces';
 
-type MedicExam = {};
+// TODO to be removed
+type MedicExam = {
+  idPatient: string
+};
 
 export class PatientsService {
 

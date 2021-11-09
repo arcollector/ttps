@@ -7,3 +7,5 @@ export const Patients = {
   Single,
   Create,
 };
+
+export * from './interfaces';

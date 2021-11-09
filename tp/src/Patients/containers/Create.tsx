@@ -1,6 +1,6 @@
 import React from 'react';
 import { Form } from '../components/Form';
-import { ErrorMessage } from '../components/ErrorMessage';
+import { ErrorMessage } from '../../shared/components/ErrorMessage';
 import { useHistory } from 'react-router-dom';
 
 import { Patient } from '../interfaces';

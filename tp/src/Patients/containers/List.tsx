@@ -16,47 +16,47 @@ export function List() {
   return (
     <div>
       <h1>Listado de pacientes</h1>
-        <table className="ui celled table">
-          <thead>
-            <tr>
-              <th>Nombre completo</th>
-              <th>DNI</th>
-              <th>Telefono</th>
-              <th>Email</th>
-              <th>Obra social</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
+      <table className="ui celled table">
+        <thead>
+          <tr>
+            <th>Nombre completo</th>
+            <th>DNI</th>
+            <th>Telefono</th>
+            <th>Email</th>
+            <th>Obra social</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
         <tbody>
           {patients.map((patient, i) =>
-            <tr key={i}>
-              <td data-label="nombre completo">
-                {patient.nombre} {patient.apellido}
-              </td>
-              <td data-label="dni">
-                {patient.dni}
-              </td>
-              <td data-label="telefono">
-                {patient.telefono}
-              </td>
-              <td data-label="email">
-                {patient.email}
-              </td>
-              <td data-label="obra social">
-                {patient.nomsoc} {patient.numsoc}
-              </td>
-              <td data-label="acciones">
-                <Button
-                  as={Link}
-                  primary
-                  size="mini"
-                  to={`/pacientes/${patient.id}`}
-                >
-                  <Icon name="eye" />
-                  Ver ficha
-                </Button>
-              </td>
-            </tr>
+          <tr key={i}>
+            <td data-label="nombre completo">
+              {patient.nombre} {patient.apellido}
+            </td>
+            <td data-label="dni">
+              {patient.dni}
+            </td>
+            <td data-label="telefono">
+              {patient.telefono}
+            </td>
+            <td data-label="email">
+              {patient.email}
+            </td>
+            <td data-label="obra social">
+              {patient.nomsoc} {patient.numsoc}
+            </td>
+            <td data-label="acciones">
+              <Button
+                as={Link}
+                primary
+                size="mini"
+                to={`/pacientes/${patient.id}`}
+              >
+                <Icon name="eye" />
+                Ver ficha
+              </Button>
+            </td>
+          </tr>
           )}
         </tbody>
       </table>

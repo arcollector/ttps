@@ -4,6 +4,7 @@ import { AppointmentsSchedule }  from '../../../Appointments';
 import { MedicalExams } from '../../../MedicalExams';
 import { Patients } from '../../../Patients';
 import { Lotes } from '../../../Lotes';
+import { Insurers } from '../../../Insurers';
 
 export function Routes(props) {
     const {user}=props
@@ -29,6 +30,16 @@ export function Routes(props) {
             </Route>
             <Route path="/pacientes/:id" exact>
                 <Patients.Single />
+            </Route>
+
+            <Route path="/obra-sociales" exact>
+                <Insurers.List />
+            </Route>
+            <Route path="/obra-sociales/crear" exact>
+                <Insurers.Create />
+            </Route>
+            <Route path="/obra-sociales/:id" exact>
+                <Insurers.Single />
             </Route>
         </Switch>
     );

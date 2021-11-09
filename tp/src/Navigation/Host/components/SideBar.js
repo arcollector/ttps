@@ -139,6 +139,14 @@ export function SideBarImpl(props) {
                         <Icon name="plus square outline"/>
                         Agregar Nuevo Paciente
                     </Menu.Item>
+
+                    <Menu.Item
+                        as={Link}
+                        to="/obra-sociales"
+                    >
+                        <Icon name="database"/>
+                        Obra sociales  
+                    </Menu.Item>
                 </div>
             </Menu>
 

@@ -2,6 +2,7 @@ import { Patient } from '../interfaces'
 
 export const patient: Patient = {
   id: '123456',
+  idInsurer: '12345abc',
   nomsoc: 'IOMA',
   email: 'test@test.com',
   numsoc: '12345',
@@ -15,6 +16,7 @@ export const patient: Patient = {
 
 export const patientRecentlyCreated: Patient = {
   id: '',
+  idInsurer: '12345abc',
   nomsoc: 'IOMA',
   email: 'test@test.com',
   numsoc: '12345',
