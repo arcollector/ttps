@@ -17,6 +17,7 @@ export function Create() {
   };
 
   const onSubmit = React.useCallback(async (formData: Insurer) => {
+    setErrros([]);
     setIsLoading(true);
     const success = await actions.createInsurer(formData);
     if (success) {

@@ -40,9 +40,6 @@ describe('<List />', () => {
     expect(
       Testing.within(row).getByText(patient.email)
     ).toBeInTheDocument();
-    expect(
-      Testing.within(row).getByText(`${patient.nomsoc} ${patient.numsoc}`)
-    ).toBeInTheDocument();
   });
 
   test('should to attribute of details button correct', async () => {

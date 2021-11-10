@@ -39,6 +39,7 @@ export function Single() {
   };
 
   const onConfirmDelete = React.useCallback(async () => {
+    setErrros([]);
     setIsLoadingForDelete(true);
     await actions.removeInsurer(insurerId);
     history.replace('/obra-sociales');

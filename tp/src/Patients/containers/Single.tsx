@@ -28,6 +28,7 @@ export function Single() {
   };
 
   const onUpdate = async (values: Patient) => {
+    setErrros([]);
     setIsLoadingForUpdate(true);
     await actions.updatePatient(patientId, values);
     setIsLoadingForUpdate(false);

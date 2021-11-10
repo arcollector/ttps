@@ -7,3 +7,6 @@ export const Insurers = {
   Create,
   Single,
 };
+
+export * from './interfaces';
+export * as actions from './actions';

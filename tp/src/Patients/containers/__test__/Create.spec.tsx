@@ -3,14 +3,37 @@ import * as RouterDom from 'react-router-dom';
 
 import { patientRecentlyCreated } from '../../__data__';
 import * as actions from '../../actions';
+import { actions as insurersActions } from '../../../Insurers';
+import { insurer } from '../../../Insurers/__data__'
+
 import { Create } from '../Create';
 
 describe('<Create />', () => {
+  let spyOnGetAllInsurers: jest.SpyInstance<unknown, Parameters<typeof insurersActions.getAllInsurers>>;
+  let isFullyRendered = false;
+
+  beforeEach(() => {
+    spyOnGetAllInsurers = jest
+      .spyOn(insurersActions, 'getAllInsurers')
+      .mockImplementation(() => {
+        isFullyRendered = true;
+        return Promise.resolve([insurer]);
+      });
+  });
+
+  afterEach(() => {
+    spyOnGetAllInsurers.mockRestore();
+  });
 
   function getComponentForTesting() {
     return (
       <Create />
     );
+  }
+
+  async function renderAndWait() {
+    Testing.render(getComponentForTesting());
+    await Testing.waitFor(() => isFullyRendered);
   }
 
   describe('should invoke createPacient action when form is submitted', () => {
@@ -23,6 +46,14 @@ describe('<Create />', () => {
         Testing.screen.getByRole(role, { name }),
         { target: { value } }
       );
+    }
+
+    function triggerInsurerComboBoxChange() {
+      const insuranceElem = Testing
+        .screen
+        .getAllByRole('option')
+        .find(((elem) => elem.textContent === insurer.nombre))!;
+      Testing.fireEvent.click(insuranceElem);
     }
 
     beforeEach(() => {
@@ -39,14 +70,14 @@ describe('<Create />', () => {
     });
 
     test('creation of patient was successful', async () => {
-      Testing.render(getComponentForTesting());
+      await renderAndWait();
       fillForm('textbox', 'Nombre', patientRecentlyCreated.nombre);
       fillForm('textbox', 'Apellido', patientRecentlyCreated.apellido);
       fillForm('spinbutton', 'DNI', patientRecentlyCreated.dni);
       fillForm('spinbutton', 'Telefono', patientRecentlyCreated.telefono);
       fillForm('textbox', 'Fecha de nacimiento (DD/MM/YYYY)', patientRecentlyCreated.fecnac);
       fillForm('textbox', 'Correo Electronico', patientRecentlyCreated.email);
-      fillForm('textbox', 'Nombre de la obra social', patientRecentlyCreated.nomsoc);
+      triggerInsurerComboBoxChange();
       fillForm('textbox', 'Numero de la obra social', patientRecentlyCreated.numsoc);
       fillForm('textbox', 'Historia clinica', patientRecentlyCreated.historial);
       Testing.fireEvent.submit(Testing.screen.getByRole('button', { name: 'Crear paciente' }));

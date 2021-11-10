@@ -4,7 +4,7 @@ import { ErrorMessage } from '../../shared/components/ErrorMessage';
 import { useHistory } from 'react-router-dom';
 
 import { Patient } from '../interfaces';
-import * as actions from '../actions'
+import * as actions from '../actions';
 
 export function Create() {
   const history = useHistory();
@@ -17,6 +17,7 @@ export function Create() {
   };
 
   const onSubmit = React.useCallback(async (formData: Patient) => {
+    setErrros([]);
     setIsLoading(true);
     const success = await actions.createPatient(formData);
     if (success) {

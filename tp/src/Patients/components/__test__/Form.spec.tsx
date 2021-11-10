@@ -3,14 +3,30 @@ import * as Testing from '@testing-library/react'
 
 import { Patient, emptyPatient } from '../../interfaces';
 import { patient } from '../../__data__';
+import { actions as insurersActions } from '../../../Insurers';
+import { insurer } from '../../../Insurers/__data__'
+
 import { Form } from '../Form';
 
 describe('<Form />', () => {
+  let spyOnGetAllInsurers: jest.SpyInstance<unknown, Parameters<typeof insurersActions.getAllInsurers>>;
+
+  beforeEach(() => {
+    spyOnGetAllInsurers = jest
+      .spyOn(insurersActions, 'getAllInsurers')
+      .mockImplementation(() => Promise.resolve([insurer]));
+  });
+
+  afterEach(() => {
+    spyOnGetAllInsurers.mockRestore();
+  });
+  
+  type Props = React.ComponentProps<typeof Form>;
 
   function getInitialProps(
     onSubmit = jest.fn(),
     onSubmitError = jest.fn()
-  ): React.ComponentProps<typeof Form> {
+  ): Props {
     return {
       values: emptyPatient,
       onSubmitError,
@@ -27,11 +43,19 @@ describe('<Form />', () => {
     );
   }
 
+  async function renderAndWait(props: Props) {
+    Testing.render(getComponentForTesting(props));
+    await Testing.waitFor(() => Testing.screen.getAllByRole('option'));
+  }
+
   function triggerChange(role: string, accebilityName: string, value: string) {
-    Testing.fireEvent.change(
-      Testing.screen.getByRole(role, { name: accebilityName }),
-      { target: { value } }
-    );
+    const elem = Testing.screen.getByRole(role, { name: accebilityName });
+    Testing.fireEvent.change(elem, { target: { value } });
+  }
+
+  function triggerChangeComboBox(testID: string, value: string) {
+    const elem = Testing.screen.getByTestId(testID).firstChild as HTMLElement;
+    Testing.fireEvent.change(elem, { target: { value } });
   }
 
   function fillFormFields(fields: Partial<Patient>) {
@@ -41,23 +65,37 @@ describe('<Form />', () => {
     fields.fecnac && triggerChange('textbox', 'Fecha de nacimiento (DD/MM/YYYY)', fields.fecnac);
     fields.telefono && triggerChange('spinbutton', 'Telefono', fields.telefono);
     fields.email && triggerChange('textbox', 'Correo Electronico', fields.email);
-    fields.nomsoc && triggerChange('textbox', 'Nombre de la obra social', fields.nomsoc);
+    fields.idInsurer && triggerChangeComboBox('idInsurer', fields.idInsurer);
     fields.numsoc && triggerChange('textbox', 'Numero de la obra social', fields.numsoc);
     fields.historial && triggerChange('textbox', 'Historia clinica', fields.historial);
   }
 
   describe('should mount initially using props.values as values for each form field', () => {
-    function testFormFields(values: {role: string, name: string, value: string}[]) {
-      Object.values(values).forEach(({role, name, value}) => {
-        expect(
-          (Testing.screen.getByRole(role, { name }) as HTMLInputElement).value
-        ).toBe(value);
+    type TestableFormField = {
+      role: string,
+      name?: string,
+      value: string,
+      testID?: string,
+    };
+    function testFormFields(values: TestableFormField[]) {
+      Object.values(values).forEach(({role, name, value, testID}) => {
+        if (role === 'combobox' && testID) {
+          const elem = Testing.screen.getByTestId(testID).firstChild!.nextSibling as HTMLElement;
+          if (!value) {
+            expect(elem.classList.contains('default')).toBe(true);
+          } else {
+            expect(elem.classList.contains('default')).toBe(false);
+            expect(elem.textContent).toBe(value);
+          }
+        } else {
+          const elem = Testing.screen.getByRole(role, { name }) as HTMLInputElement;
+          expect(elem.value).toBe(value);
+        }
       });
     }
 
-    test('when props.values is undefined all fields must be blank', () => {
-      const props = getInitialProps();
-      Testing.render(getComponentForTesting({ ...props, values: undefined }));
+    test('when props.values is undefined all fields must be blank', async () => {
+      await renderAndWait(getInitialProps());
       testFormFields([
         { role: 'textbox', name: 'Nombre', value: '' },
         { role: 'textbox', name: 'Apellido', value: '' },
@@ -65,15 +103,14 @@ describe('<Form />', () => {
         { role: 'textbox', name: 'Fecha de nacimiento (DD/MM/YYYY)', value: '' },
         { role: 'spinbutton', name: 'Telefono', value: '' },
         { role: 'textbox', name: 'Correo Electronico', value: '' },
-        { role: 'textbox', name: 'Nombre de la obra social', value: '' },
+        { role: 'combobox', testID: 'idInsurer', value: '' },
         { role: 'textbox', name: 'Numero de la obra social', value: '' },
         { role: 'textbox', name: 'Historia clinica', value: '' },
       ]);
     });
 
-    test('when props.values is defined all fields must be fill up', () => {
-      const props = getInitialProps();
-      Testing.render(getComponentForTesting({ ...props, values: patient }));
+    test('when props.values is defined all fields must be fill up', async () => {
+      await renderAndWait({ ...getInitialProps(), values: patient });
       testFormFields([
         { role: 'textbox', name: 'Nombre', value: patient.nombre },
         { role: 'textbox', name: 'Apellido', value: patient.apellido },
@@ -81,26 +118,26 @@ describe('<Form />', () => {
         { role: 'textbox', name: 'Fecha de nacimiento (DD/MM/YYYY)', value: patient.fecnac },
         { role: 'spinbutton', name: 'Telefono', value: patient.telefono },
         { role: 'textbox', name: 'Correo Electronico', value: patient.email },
-        { role: 'textbox', name: 'Nombre de la obra social', value: patient.nomsoc },
+        { role: 'combobox', testID: 'idInsurer', value: insurer.nombre },
         { role: 'textbox', name: 'Numero de la obra social', value: patient.numsoc },
         { role: 'textbox', name: 'Historia clinica', value: patient.historial },
       ]);
     });
   });
 
-  test('should dont submit if all fields are empty', () => {
+  test('should dont submit if all fields are empty', async () => {
     const props = getInitialProps();
-    const { getByTestId } = Testing.render(getComponentForTesting(props));
-    const formElem = getByTestId('form');
+    await renderAndWait(props);
+    const formElem = Testing.screen.getByTestId('form');
     Testing.fireEvent.submit(formElem);
     expect(props.onSubmitError).toBeCalledTimes(1);
     expect(props.onSubmit).toBeCalledTimes(0);
   });
 
-  test('should submit if all fields are valid', () => {
+  test('should submit if all fields are valid', async () => {
     const props = getInitialProps();
-    const { getByTestId } = Testing.render(getComponentForTesting(props));
-    const formElem = getByTestId('form');
+    await renderAndWait(props);
+    const formElem = Testing.screen.getByTestId('form');
     fillFormFields(patient);
     Testing.fireEvent.submit(formElem);
     expect(props.onSubmitError).toBeCalledTimes(0);
@@ -121,8 +158,8 @@ describe('<Form />', () => {
       doTest(goodCases, false);
     }
 
-    beforeEach(() => {
-      Testing.render(getComponentForTesting());
+    beforeEach(async () => {
+      await renderAndWait(getInitialProps());
     });
 
     test('should validate nombre value', () => {
@@ -174,16 +211,16 @@ describe('<Form />', () => {
     });
   });
 
-  test('should ignore successive submit events if props.isLoading is true', () => {
+  test('should ignore successive submit events if props.isLoading is true', async () => {
     const props = { ...getInitialProps(), isLoading: true };
-    Testing.render(getComponentForTesting(props));
+    await renderAndWait(props);
     Testing.fireEvent.submit(Testing.screen.getByTestId('form'));
     expect(props.onSubmit).toBeCalledTimes(0);
   });
 
-  test('should dni field disable if props.disableDni is true', () => {
+  test('should dni field disable if props.disableDni is true', async () => {
     const props = { ...getInitialProps(), disableDni: true };
-    Testing.render(getComponentForTesting(props));
+    await renderAndWait(props);
     expect(
       Testing.screen.getByRole('spinbutton', { name: 'DNI' })
     ).toBeDisabled();

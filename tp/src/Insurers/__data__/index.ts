@@ -1,7 +1,7 @@
 import { Insurer } from '../interfaces';
 
 export const insurer: Insurer = {
-  id: '123456',
+  id: 'ioma',
   nombre: 'IOMA',
 };
 

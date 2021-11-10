@@ -6,14 +6,14 @@ export const schema = yup.object().shape({
     .string()
     .optional(),
 
-  nomsoc: yup
-    .string()
-    .optional(),
-
   email: yup
     .string()
     .email('Email ingresado es invalido')
     .required('Email no puede estar vacio'),
+
+  idInsurer: yup
+    .string()
+    .optional(),
 
   numsoc: yup
     .string()
@@ -67,13 +67,13 @@ export const schema = yup.object().shape({
 
 export const validators = {
   id: yup.reach(schema, 'id'),
-  nomsoc: yup.reach(schema, 'nomsoc'),
   email: yup.reach(schema, 'email'),
-  numsoc: yup.reach(schema, 'numsoc'),
   telefono: yup.reach(schema, 'telefono'),
   nombre: yup.reach(schema, 'nombre'),
   apellido: yup.reach(schema, 'apellido'),
   dni: yup.reach(schema, 'dni'),
   fecnac: yup.reach(schema, 'fecnac'),
   historial: yup.reach(schema, 'historial'),
+  idInsurer: yup.reach(schema, 'idInsurer'),
+  numsoc: yup.reach(schema, 'numsoc'),
 };

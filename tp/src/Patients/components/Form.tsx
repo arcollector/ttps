@@ -4,8 +4,10 @@ import * as yup from 'yup';
 
 import { FormInput } from '../../shared/components/FormInput';
 import { FormTextArea } from '../../shared/components/FormTextArea';
+import { FormDropdown, Item } from '../../shared/components/FormDropdown';
 import { Patient, emptyPatient } from '../interfaces/types';
 import { validators, schema } from '../interfaces';
+import { actions as actionsInsurers } from '../../Insurers';
 
 type Props = {
   values?: Patient,
@@ -27,6 +29,24 @@ export function Form(props: Props) {
 
   const onChange = (name: string, value: string) => {
     setFormData((v) => ({ ...v, [name]: value }));
+  };
+
+  const [ insurersAsItems, setInsurersAsItems ] = React.useState<Item[]>([]);
+  React.useEffect(() => {
+    (async () => {
+      const insurers = await actionsInsurers.getAllInsurers();
+      setInsurersAsItems(
+        insurers.map((insurer) => ({
+          text: insurer.nombre,
+          key: insurer.id,
+          value: insurer.id,
+        }))
+      );
+    })();
+  }, []);
+
+  const onChangeInsurer = (_: string, item: Item | null) => {
+    setFormData((v) => ({ ...v, idInsurer: item ? item.value : '' }));
   };
 
   const onSubmit = React.useCallback(() => {
@@ -118,14 +138,15 @@ export function Form(props: Props) {
         required
       />
 
-      <FormInput
-        label="Nombre de la obra social"
-        name="nomsoc"
-        placeholder="Nombre de la obra social del paciente"
-        type="text"
-        onChange={onChange}
-        value={formData.nomsoc}
-        validator={validators.nomsoc}
+      <FormDropdown
+        label="Obra social"
+        name="idInsurer"
+        placeholder="Obra social del paciente"
+        onChange={onChangeInsurer}
+        value={formData.idInsurer}
+        values={insurersAsItems}
+        validator={validators.idInsurer}
+        nullyfiedText="No tiene obra social"
       />
 
       <FormInput

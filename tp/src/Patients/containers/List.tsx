@@ -23,7 +23,6 @@ export function List() {
             <th>DNI</th>
             <th>Telefono</th>
             <th>Email</th>
-            <th>Obra social</th>
             <th>Acciones</th>
           </tr>
         </thead>
@@ -41,9 +40,6 @@ export function List() {
             </td>
             <td data-label="email">
               {patient.email}
-            </td>
-            <td data-label="obra social">
-              {patient.nomsoc} {patient.numsoc}
             </td>
             <td data-label="acciones">
               <Button
