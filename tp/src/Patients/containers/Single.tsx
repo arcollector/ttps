@@ -1,9 +1,9 @@
 import React from 'react';
-import { Button } from 'semantic-ui-react';
-import { ErrorMessage } from '../../shared/components/ErrorMessage';
 import { useParams, useHistory } from 'react-router-dom';
 
 import { Form } from '../components/Form';
+import { FormDeletion } from '../../shared/components/FormDeletion';
+import { ErrorMessage } from '../../shared/components/ErrorMessage';
 import { Patient, emptyPatient } from '../interfaces/types';
 import * as actions from '../actions';
 
@@ -69,37 +69,15 @@ export function Single() {
       />
 
       <hr />
-  
-      {!isDeleteMode &&
-      <Button
-        className="negative"
-        type="button"
-        onClick={onPreDelete}
-      >
-        Borrar paciente
-      </Button>
-      }
 
-      {isDeleteMode &&
-      <div style={{ display: 'flex', flexDirection: 'row' }}>
-        <h3 style={{ marginRight: 50 }}>Esta seguro?</h3>
-        <Button
-          className="negative"
-          type="button"
-          loading={isLoadingForDelete}
-          onClick={onConfirmDelete}
-        >
-          Si
-        </Button>
-        <Button
-          className="grey"
-          type="button"
-          onClick={onCancelDelete}
-        >
-          No
-        </Button>
-      </div>
-      }
+      <FormDeletion
+        label="Borrar paciente"
+        onPreDelete={onPreDelete}
+        isDeleteMode={isDeleteMode}
+        isLoading={isLoadingForDelete}
+        onConfirm={onConfirmDelete}
+        onCancel={onCancelDelete}
+      />
     </div>
   );
 }
