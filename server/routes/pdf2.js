@@ -5,7 +5,7 @@ var ReactDOMServer = require('react-dom/server');
 var React= require('react');
 const router =require("express").Router();
 const pdfCtrol= require('../controllers/pdfController');
-
+const { sendEmail } = require('../helpers/emailSender');
 
 
 
@@ -38,5 +38,14 @@ router.get("/informe", async(req,res)=>{
     
    
 })
+
+router.post('/enviar-email', async (req, res) => {
+    await sendEmail(
+        req.body.to,
+        req.body.subject,
+        req.body.content
+    );
+    res.json(true);
+});
 
 module.exports=router;
