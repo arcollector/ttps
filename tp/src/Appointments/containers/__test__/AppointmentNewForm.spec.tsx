@@ -4,14 +4,13 @@ import * as Testing from '@testing-library/react';
 import { actions as insurersActions } from '../../../Insurers';
 import { insurer } from '../../../Insurers/__data__';
 import { patient } from '../../../Patients/__data__';
-import * as appointmentsActions from '../../actions';
+import { Patients } from '../../../Patients';
 import { AppointmentNewForm } from '../AppointmentNewForm';
 
 describe('', () => {
   let getAllInsurersResolved: boolean;
   let spyOnGetAllInsurers: jest.SpyInstance<unknown, Parameters<typeof insurersActions.getAllInsurers>>;
-  let spyOnSearchByDniResolved: boolean;
-  let spyOnSearchByDni: jest.SpyInstance<unknown, Parameters<typeof appointmentsActions.searchPatientByDni>>;
+  let mockPatientsSearchForm: jest.SpyInstance<unknown, Parameters<typeof Patients.SearchForm>>;
 
   beforeEach(() => {
     getAllInsurersResolved = false;
@@ -20,22 +19,25 @@ describe('', () => {
         getAllInsurersResolved = true;
         return Promise.resolve([insurer]);
       });
-    spyOnSearchByDniResolved = false;
-    spyOnSearchByDni = jest.spyOn(appointmentsActions, 'searchPatientByDni')
-      .mockImplementation(() => {
-        spyOnSearchByDniResolved = true;
-        return Promise.resolve(patient);
-      });
+    mockPatientsSearchForm = jest.spyOn(Patients, 'SearchForm')
+      .mockImplementation((props) => {
+        const onClick = () => {
+          props.onSearch(patient);
+        };
+        return (
+          <button onClick={onClick}>Buscar</button>
+      );
+    });
   });
 
   afterEach(() => {
     spyOnGetAllInsurers.mockRestore();
-    spyOnSearchByDni.mockRestore();
+    mockPatientsSearchForm.mockRestore();
   });
 
   function getComponentForTesting() {
     return (
-      <AppointmentNewForm />
+      <AppointmentNewForm reserved={[]} />
     );
   }
 
@@ -49,7 +51,6 @@ describe('', () => {
     Testing.fireEvent.click(
       Testing.screen.getByRole('button', { name: 'Buscar' })
     );
-    await Testing.waitFor(() => spyOnSearchByDniResolved);
     expect(
       Testing.screen.getByText('Obra social: IOMA')
     ).toBeInTheDocument()

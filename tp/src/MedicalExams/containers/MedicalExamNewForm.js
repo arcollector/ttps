@@ -17,19 +17,16 @@ import examen5 from '../assets/virus5.jpg'
 
 
 import saveState from '../../shared/helpers/saveState';
-
-
+import { Patients, helpers as patientsHelpers } from '../../Patients'
+import { actions as insurersActions } from '../../Insurers';
 
 import '../styles/MedicalExamNewForm.scss';
 
 const db= firebase.firestore(firebase);
 
 export function MedicalExamNewForm(props) {
-
     const {setShowModal, user}= props;
 
-   
-    
     const [presupuesto, setPresupuesto] = useState(0);
     const [formData, setFormData] = useState(initialValues());
     const [seleccionado, setSeleccionado] = useState(initialState());
@@ -38,9 +35,14 @@ export function MedicalExamNewForm(props) {
     const [doctors, setDoctors] = useState([]);
     const [prices, setPrices] = useState(null);
     const [doctorSelected, setDoctorSelected] = useState("");
-    
+    const [ insurers, setInsurers ] = React.useState([]);
+    const [ patientInsurerName, setPacientInsurerName ] = React.useState('');
 
-    
+    React.useEffect(() => {
+        (async () => {
+          setInsurers(await insurersActions.getAllInsurers());
+        })();
+    }, []);
 
     useEffect(() => {
         const refDocPrices= db.collection("pricesMedicExams");
@@ -289,49 +291,26 @@ export function MedicalExamNewForm(props) {
         setFormData({...formData, [e.target.name]:e.target.value});
         
     }
-
     
+    const onSearchPatient = (patient) => {
+        setPaciente(patient);
+    };
 
-
-      const searchPatient=()=>{
-        let pacienteBuscado=[];
-        const refDoc= db.collection('patients').where("dni","==",formData.search.toString());
-        refDoc.get().then(doc=>{
-            if(!doc.empty){
-                
-                
-                
-                pacienteBuscado.push(doc.docs[0].data());
-                pacienteBuscado[0].id=doc.docs[0].id;
-                console.log(pacienteBuscado);
-                
-            }else{
-                toast.warning("El paciente que ingreso no existe");
-            }
-            setPaciente(pacienteBuscado[0]);
-      })
-    }
+    useEffect(() => {
+        setPacientInsurerName(
+            patientsHelpers.getPatientInsurerName(paciente, insurers)
+        );
+    }, [paciente, insurers]);
 
     const handlerDoctorSelected=(e)=>{
         setDoctorSelected(e.target.value);
-        
     }
-
- 
-    
 
     return (
         <Form className="add-medic-exam-form" onSubmit={onSubmit}>
-
-            <div className="ui search">
-            <div className="ui icon input">
-                <input className="prompt" name="search" type="text" onChange={onChange} placeholder="Dni del paciente..."/>
-                <i className="search icon" onClick={searchPatient}></i>
-                
-            </div>
-            <Button type="button" onClick={searchPatient}>Buscar</Button>
-            <div className="results"></div>
-            </div>
+            <Patients.SearchForm
+                onSearch={onSearchPatient}
+            />
 
             <div className="header-section">
                 <h4>Datos del paciente</h4>
@@ -375,19 +354,24 @@ export function MedicalExamNewForm(props) {
 
             </Form.Field>
 
-            <div className="two-columns">
-                <Form.Field>
-                    <div>Nombre de la obra social:</div> 
-                    <Input name="nomsoc" disabled={true} value={paciente?.nomsoc} placerholder="nomsoc" />
-
-                </Form.Field>
-                
-                <Form.Field>
-                    <div>Numero de la obra social:</div> 
-                    <Input name="numsoc" disabled={true} value={paciente?.numsoc} placerholder="numsoc" />
-
-                </Form.Field>
-            </div>
+            <Form.Field>
+                <div>Nombre de la obra social:</div> 
+                <Input
+                    name="nomsoc"
+                    disabled={true}
+                    value={patientInsurerName}
+                    placerholder="nomsoc"
+                />
+            </Form.Field>
+            
+            <Form.Field>
+                <div>Numero de la obra social:</div> 
+                <Input
+                    name="numsoc" 
+                    disabled={true}
+                    value={paciente?.numsoc} placerholder="numsoc"
+                />
+            </Form.Field>
 
             <div className="header-section">
                 <h4>Datos del estudio</h4>

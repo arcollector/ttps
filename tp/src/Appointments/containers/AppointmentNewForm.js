@@ -14,11 +14,9 @@ import { db } from '../../shared/utils/Firebase';
 import '../styles/AppointmentNewForm.scss'
 import "react-widgets/scss/styles.scss";
 
-import {
-    Insurer,
-    actions as insurerActions,
-} from '../../Insurers';
+import {  actions as insurersActions } from '../../Insurers';
 import * as actions from '../actions'
+import { Patients, helpers as patientsHelpers } from '../../Patients'
 
 //INICIALIZACIONES
 
@@ -43,17 +41,12 @@ export function AppointmentNewForm(props) {
 
     React.useEffect(() => {
       (async () => {
-        setInsurers(await insurerActions.getAllInsurers());
+        setInsurers(await insurersActions.getAllInsurers());
       })();
     }, []);
 
-    const searchPatient = async () => {
-        try {
-            setPaciente(
-                await actions.searchPatientByDni(formData.search.toString())
-            );
-        } catch (e) {
-        }
+    const onSearchPatient = (patient) => {
+        setPaciente(patient);
     };
 
     useEffect(() => {
@@ -71,20 +64,11 @@ export function AppointmentNewForm(props) {
     }, [paciente])
 
     useEffect(() => {
-        if (paciente && insurers.length > 0) {
-            const insurer = insurers.find((insurer) => insurer.id === paciente.idInsurer);
-            if (insurer) {
-                setPacientInsurerName(insurer.nombre);
-            }
-        }
+        setPacientInsurerName(
+            patientsHelpers.getPatientInsurerName(paciente, insurers)
+        );
     }, [paciente, insurers]);
     
-
-    const onChange=(e)=>{
-        setFormData({...formData, [e.target.name]:e.target.value});
-        
-    }
-
     const onSubmit=()=>{
         if(reserved[formData.hour+formData.date]){
             
@@ -176,21 +160,9 @@ export function AppointmentNewForm(props) {
     return (
         <Form className="add-medic-exam-form" onSubmit={onSubmit}>
 
-            <div className="ui search">
-            <div className="ui icon input">
-                <input className="prompt" name="search" type="text" onChange={onChange} placeholder="Dni del paciente..."/>
-                <i className="search icon" onClick={searchPatient}></i>
-                
-            </div>
-            <Button
-                data-testid="search-icon"
-                type="button" 
-                onClick={searchPatient}
-            >
-                Buscar
-            </Button>
-            <div className="results"></div>
-            </div>
+            <Patients.SearchForm
+                onSearch={onSearchPatient}
+            />
 
             <div className="header-section">
                 <h4>Datos del paciente</h4>
