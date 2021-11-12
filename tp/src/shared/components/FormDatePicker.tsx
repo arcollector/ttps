@@ -17,7 +17,7 @@ type Props = {
 export function FormDatePicker(props: Props) {
   const fromStringToDate = (value: string) => {
     const d = moment(value, 'DD/MM/YYYY');
-    return d.isValid() ? d.toDate() : new Date();
+    return d.isValid() ? d.toDate() : null;
   };
   const [ valueAsDate, setValueAsDate ] = React.useState(fromStringToDate(props.value));
 

@@ -1,9 +1,8 @@
 import http from './httpservices';
 
-const apiURL=`http://localhost:8080/api/pdf/getpdf`;
-
-const pdfService={
+const pdfService = {
     downloadPDF:function(webURL,paciente){
+        const apiURL=`http://localhost:8080/api/pdf/getpdf`;
         console.log(webURL);
         console.log(paciente);
         return http.get(apiURL,{
@@ -23,6 +22,6 @@ const pdfService={
             {to, subject, content}
         );
     },
-}
+};
 
 export default pdfService;
