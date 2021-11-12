@@ -3,8 +3,8 @@ import {toast} from 'react-toastify';
 import firebase from '../../shared/utils/Firebase';
 import 'firebase/compat/storage';
 import 'firebase/compat/firestore';
-import { sendEmail } from '../../shared/helpers/emailSender';
 import saveState from '../../shared/helpers/saveState';
+import pdfService from '../../pdfservice';
 
 const db= firebase.firestore(firebase);
 
@@ -18,17 +18,16 @@ export default function EnviarPresupuesto(props) {
 
 
     const handlerClick=()=>{
-        
-
         storage.ref(`presupuestosPdf/${exam.id}.pdf`).getDownloadURL().then(url=>{
-            
             const html=`<p>Acceda a esta direccion para descargar el presupuesto de su estudio medico ${url}</p>`;
-
-            sendEmail('grupo11unlp@gmail.com', 'Presupuesto del estudio medico', html);
-
-            
+            console.log(1, url)
+            pdfService.sendUsingSendgrid(
+                // TODO emial del paciente, este es el from
+                'juancrujca@gmail.com',
+                'Presupuesto del estudio medico',
+                html
+            );
         })
-
         saveState("esperandoComprobante", user.displayName, exam.id).then(idState=>{
             console.log(exam.id);
             var refMedicExam = db.collection('medicExams').doc(exam.id);

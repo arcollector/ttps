@@ -130,6 +130,7 @@ export function MedicalExamNewForm(props) {
     
                             }).then((e)=>{
                                 let idMedicExam=e.id;
+                                console.log('por que no anda esto');
                                 MyDocument(idMedicExam);
                                 saveState("enviarPresupuesto", user.displayName, idMedicExam).then(idState=>{
                                     console.log(idMedicExam);
@@ -172,7 +173,6 @@ export function MedicalExamNewForm(props) {
     // }
 
     const MyDocument=async(idMedicExam)=>{
-        
         try{
             pdfService.downloadPDF(`http://localhost:8080/pdf/informe?usuario=${paciente.nombre}`, paciente).then((res)=>{
 
@@ -184,7 +184,13 @@ export function MedicalExamNewForm(props) {
                 const metadata = {
                     contentType: 'application/pdf',
                   };
-                const ref= firebase.storage().ref().child(`presupuestosPdf/${idMedicExam}.pdf`);
+                console.log(1, idMedicExam);
+                const ref = firebase
+                    .storage()
+                    .ref()
+                    .child(`presupuestosPdf/${idMedicExam}.pdf`);
+                  
+                console.log(2, ref);
                 ref.put(file, metadata);
                 
                 console.log(file);

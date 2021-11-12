@@ -23,6 +23,7 @@ export function FormDeletion(props: Props) {
     <>
       {!isDeleteMode &&
       <Button
+        data-testid="predelete-form"
         className="negative"
         type="button"
         onClick={onPreDelete}
@@ -32,7 +33,10 @@ export function FormDeletion(props: Props) {
       }
 
       {isDeleteMode &&
-      <div style={{ display: 'flex', flexDirection: 'row' }}>
+      <div
+        data-testid="delete-form"
+        style={{ display: 'flex', flexDirection: 'row' }}
+      >
         <h3 style={{ marginRight: 50 }}>Esta seguro?</h3>
         <Button
           className="negative"

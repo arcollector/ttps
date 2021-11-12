@@ -3,7 +3,6 @@ import {toast} from 'react-toastify';
 import firebase from '../../shared/utils/Firebase';
 import 'firebase/compat/storage';
 import 'firebase/compat/firestore';
-import { sendEmail } from '../../shared/helpers/emailSender';
 import saveState from '../../shared/helpers/saveState';
 
 const db= firebase.firestore(firebase);

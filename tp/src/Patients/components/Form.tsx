@@ -5,6 +5,7 @@ import * as yup from 'yup';
 import { FormInput } from '../../shared/components/FormInput';
 import { FormTextArea } from '../../shared/components/FormTextArea';
 import { FormDropdown, Item } from '../../shared/components/FormDropdown';
+import { FormDatePicker } from '../../shared/components/FormDatePicker';
 import { Patient, emptyPatient } from '../interfaces/types';
 import { validators, schema } from '../interfaces';
 import { actions as actionsInsurers } from '../../Insurers';
@@ -45,8 +46,25 @@ export function Form(props: Props) {
     })();
   }, []);
 
+  const [ numSocDisabled, setNumSocDisabled ] = React.useState(
+    props.values?.idInsurer === ''
+  );
+
   const onChangeInsurer = (_: string, item: Item | null) => {
-    setFormData((v) => ({ ...v, idInsurer: item ? item.value : '' }));
+    if (!item) {
+      setFormData((v) => ({
+        ...v,
+        idInsurer: '',
+        numsoc: '',
+      }));
+      setNumSocDisabled(true);
+    } else {
+      setFormData((v) => ({
+        ...v,
+        idInsurer: item.value,
+      }));
+      setNumSocDisabled(false);
+    }
   };
 
   const onSubmit = React.useCallback(() => {
@@ -105,14 +123,12 @@ export function Form(props: Props) {
         required
       />
 
-      <FormInput
-        label="Fecha de nacimiento (DD/MM/YYYY)"
+      <FormDatePicker
+        label="Fecha de nacimiento"
         name="fecnac"
         placeholder="Fecha de nacimiento del paciente en formato DD/MM/YYYY"
-        type="text"
         onChange={onChange}
         value={formData.fecnac}
-        validator={validators.fecnac}
         required
       />
 
@@ -157,6 +173,7 @@ export function Form(props: Props) {
         onChange={onChange}
         value={formData.numsoc}
         validator={validators.numsoc}
+        disabled={numSocDisabled}
       />
 
       <FormTextArea

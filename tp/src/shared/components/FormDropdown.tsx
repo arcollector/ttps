@@ -53,7 +53,7 @@ export function FormDropdown(props: Props) {
     <Form.Field
       error={isError}
       required={props.required}
-      style={{ minHeight: 80 }}
+      style={{ minHeight: 100 }}
     >
       <label htmlFor={props.name}>
         {props.label}

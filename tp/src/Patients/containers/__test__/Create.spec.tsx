@@ -32,8 +32,9 @@ describe('<Create />', () => {
   }
 
   async function renderAndWait() {
-    Testing.render(getComponentForTesting());
+    const { container } = Testing.render(getComponentForTesting());
     await Testing.waitFor(() => isFullyRendered);
+    return container;
   }
 
   describe('should invoke createPacient action when form is submitted', () => {
@@ -56,6 +57,13 @@ describe('<Create />', () => {
       Testing.fireEvent.click(insuranceElem);
     }
 
+    function triggerBirthOfDateChange(container: HTMLElement, value: string) {
+      const elem = container
+        .querySelector('input[name="fecnac"]') as HTMLInputElement;
+      Testing.fireEvent.change(elem, { target: { value } });
+      Testing.fireEvent.blur(elem);
+    }
+
     beforeEach(() => {
       spyOnPatientCreate = jest.spyOn(actions, 'createPatient')
         .mockImplementation(() => Promise.resolve(true));
@@ -70,12 +78,12 @@ describe('<Create />', () => {
     });
 
     test('creation of patient was successful', async () => {
-      await renderAndWait();
+      const container = await renderAndWait();
       fillForm('textbox', 'Nombre', patientRecentlyCreated.nombre);
       fillForm('textbox', 'Apellido', patientRecentlyCreated.apellido);
       fillForm('spinbutton', 'DNI', patientRecentlyCreated.dni);
       fillForm('spinbutton', 'Telefono', patientRecentlyCreated.telefono);
-      fillForm('textbox', 'Fecha de nacimiento (DD/MM/YYYY)', patientRecentlyCreated.fecnac);
+      triggerBirthOfDateChange(container, patientRecentlyCreated.fecnac);
       fillForm('textbox', 'Correo Electronico', patientRecentlyCreated.email);
       triggerInsurerComboBoxChange();
       fillForm('textbox', 'Numero de la obra social', patientRecentlyCreated.numsoc);

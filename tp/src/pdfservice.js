@@ -14,7 +14,15 @@ const pdfService={
                 
             }
         })
-    }
+    },
+
+    sendUsingSendgrid(to, subject, content) {
+        const apiUrl = 'http://localhost:8080/pdf/enviar-email';
+        http.post(
+            apiUrl,
+            {to, subject, content}
+        );
+    },
 }
 
 export default pdfService;

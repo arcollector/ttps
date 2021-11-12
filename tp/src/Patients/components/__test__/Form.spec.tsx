@@ -44,8 +44,9 @@ describe('<Form />', () => {
   }
 
   async function renderAndWait(props: Props) {
-    Testing.render(getComponentForTesting(props));
+    const { container } = Testing.render(getComponentForTesting(props));
     await Testing.waitFor(() => Testing.screen.getAllByRole('option'));
+    return container;
   }
 
   function triggerChange(role: string, accebilityName: string, value: string) {
@@ -53,16 +54,23 @@ describe('<Form />', () => {
     Testing.fireEvent.change(elem, { target: { value } });
   }
 
+  function triggerBirthOfDateChange(container: HTMLElement, value: string) {
+    const elem = container
+      .querySelector('input[name="fecnac"]') as HTMLInputElement;
+    Testing.fireEvent.change(elem, { target: { value } });
+    Testing.fireEvent.blur(elem);
+  }
+
   function triggerChangeComboBox(testID: string, value: string) {
     const elem = Testing.screen.getByTestId(testID).firstChild as HTMLElement;
     Testing.fireEvent.change(elem, { target: { value } });
   }
 
-  function fillFormFields(fields: Partial<Patient>) {
+  function fillFormFields(container: HTMLElement, fields: Partial<Patient>) {
     fields.nombre && triggerChange('textbox', 'Nombre', fields.nombre);
     fields.apellido && triggerChange('textbox', 'Apellido', fields.apellido);
     fields.dni && triggerChange('spinbutton', 'DNI', fields.dni);
-    fields.fecnac && triggerChange('textbox', 'Fecha de nacimiento (DD/MM/YYYY)', fields.fecnac);
+    fields.fecnac && triggerBirthOfDateChange(container, fields.fecnac);
     fields.telefono && triggerChange('spinbutton', 'Telefono', fields.telefono);
     fields.email && triggerChange('textbox', 'Correo Electronico', fields.email);
     fields.idInsurer && triggerChangeComboBox('idInsurer', fields.idInsurer);
@@ -71,57 +79,65 @@ describe('<Form />', () => {
   }
 
   describe('should mount initially using props.values as values for each form field', () => {
+    let container: HTMLElement;
+
+    function testIdInsurerField(testID: string, value?: string) {
+      const elem = Testing.screen.getByTestId(testID).firstChild!.nextSibling as HTMLElement;
+      if (!value) {
+        expect(elem.classList.contains('default')).toBe(true);
+      } else {
+        expect(elem.classList.contains('default')).toBe(false);
+        expect(elem.textContent).toBe(value);
+      }
+    }
+
+    function testBirthOfDateField(value: string) {
+      const elem = container
+        .querySelector('input[name="fecnac"]') as HTMLInputElement;
+      Testing.fireEvent.change(elem, { target: { value } });
+      Testing.fireEvent.blur(elem);
+    }
+
     type TestableFormField = {
       role: string,
-      name?: string,
+      name: string,
       value: string,
-      testID?: string,
     };
     function testFormFields(values: TestableFormField[]) {
-      Object.values(values).forEach(({role, name, value, testID}) => {
-        if (role === 'combobox' && testID) {
-          const elem = Testing.screen.getByTestId(testID).firstChild!.nextSibling as HTMLElement;
-          if (!value) {
-            expect(elem.classList.contains('default')).toBe(true);
-          } else {
-            expect(elem.classList.contains('default')).toBe(false);
-            expect(elem.textContent).toBe(value);
-          }
-        } else {
-          const elem = Testing.screen.getByRole(role, { name }) as HTMLInputElement;
-          expect(elem.value).toBe(value);
-        }
+      Object.values(values).forEach(({role, name, value}) => {
+        const elem = Testing.screen.getByRole(role, { name }) as HTMLInputElement;
+        expect(elem.value).toBe(value);
       });
     }
 
     test('when props.values is undefined all fields must be blank', async () => {
-      await renderAndWait(getInitialProps());
+      container = await renderAndWait(getInitialProps());
       testFormFields([
         { role: 'textbox', name: 'Nombre', value: '' },
         { role: 'textbox', name: 'Apellido', value: '' },
         { role: 'spinbutton', name: 'DNI', value: '' },
-        { role: 'textbox', name: 'Fecha de nacimiento (DD/MM/YYYY)', value: '' },
         { role: 'spinbutton', name: 'Telefono', value: '' },
         { role: 'textbox', name: 'Correo Electronico', value: '' },
-        { role: 'combobox', testID: 'idInsurer', value: '' },
         { role: 'textbox', name: 'Numero de la obra social', value: '' },
         { role: 'textbox', name: 'Historia clinica', value: '' },
       ]);
+      testIdInsurerField('idInsurer', '');
+      testBirthOfDateField(patient.fecnac);
     });
 
     test('when props.values is defined all fields must be fill up', async () => {
-      await renderAndWait({ ...getInitialProps(), values: patient });
+      container = await renderAndWait({ ...getInitialProps(), values: patient });
       testFormFields([
         { role: 'textbox', name: 'Nombre', value: patient.nombre },
         { role: 'textbox', name: 'Apellido', value: patient.apellido },
         { role: 'spinbutton', name: 'DNI', value: patient.dni },
-        { role: 'textbox', name: 'Fecha de nacimiento (DD/MM/YYYY)', value: patient.fecnac },
         { role: 'spinbutton', name: 'Telefono', value: patient.telefono },
         { role: 'textbox', name: 'Correo Electronico', value: patient.email },
-        { role: 'combobox', testID: 'idInsurer', value: insurer.nombre },
         { role: 'textbox', name: 'Numero de la obra social', value: patient.numsoc },
         { role: 'textbox', name: 'Historia clinica', value: patient.historial },
       ]);
+      testIdInsurerField('idInsurer', insurer.nombre);
+      testBirthOfDateField(patient.fecnac);
     });
   });
 
@@ -136,19 +152,22 @@ describe('<Form />', () => {
 
   test('should submit if all fields are valid', async () => {
     const props = getInitialProps();
-    await renderAndWait(props);
+    const container = await renderAndWait(props);
     const formElem = Testing.screen.getByTestId('form');
-    fillFormFields(patient);
+    fillFormFields(container, patient);
     Testing.fireEvent.submit(formElem);
     expect(props.onSubmitError).toBeCalledTimes(0);
     expect(props.onSubmit).toBeCalledTimes(1);
   });
 
   describe('single field validation', () => {
+    let props: Props;
+    let container: HTMLElement;
+
     function testFieldValidation(field: keyof Patient, badCases: string[], goodCases: string[]) {
       function doTest(cases: string[], toBe: boolean) {
         cases.forEach((value) => {
-          fillFormFields({ [field]: value });
+          fillFormFields(container, { [field]: value });
           expect(
             Testing.screen.getByTestId(field).classList.contains('error')
           ).toBe(toBe);
@@ -158,8 +177,35 @@ describe('<Form />', () => {
       doTest(goodCases, false);
     }
 
+    function testBirthOfDateFieldValidation(badCases: string[], goodCases: string[]) {
+      badCases.forEach((value, i) => {
+        triggerBirthOfDateChange(container, value);
+        Testing.fireEvent.submit(
+          Testing.screen.getByTestId('form')
+        );
+        expect(props.onSubmitError).toHaveBeenNthCalledWith(
+          i + 1,
+          expect.arrayContaining(['La fecha de nacimiento debe estar en formato DD/MM/YYYY'])
+        );
+      });
+      goodCases.forEach((value, i) => {
+        triggerBirthOfDateChange(container, value);
+        Testing.fireEvent.submit(
+          Testing.screen.getByTestId('form')
+        );
+        expect(props.onSubmitError).not.toHaveBeenNthCalledWith(
+          badCases.length + 1,
+          expect.arrayContaining(['La fecha de nacimiento debe estar en formato DD/MM/YYYY'])
+        );
+      });
+    }
+
     beforeEach(async () => {
-      await renderAndWait(getInitialProps());
+      props = {
+        ...getInitialProps(),
+        onSubmitError: jest.fn(),
+      };
+      container = await renderAndWait(props);
     });
 
     test('should validate nombre value', () => {
@@ -179,10 +225,9 @@ describe('<Form />', () => {
     });
 
     test('should validate fecnac value', () => {
-      testFieldValidation(
-        'fecnac',
-        ['not a valid date', '11/11', '11/11/1010', '10/Oct/2020'],
-        ['10/10/2020']
+      testBirthOfDateFieldValidation(
+        ['not a valid date'],
+        ['11/11', '10/Oct/2020', '10/10/2020']
       );
     });
 
