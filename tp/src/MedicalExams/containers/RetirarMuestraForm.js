@@ -61,6 +61,7 @@ export default function RetirarMuestraForm(props) {
                     db.collection("lotes").add({
                         idMedicExam1:arrayStates[0].idMedicExam,
                         idMedicExam2:arrayStates[1].idMedicExam,
+                        state:"esperandoResultado"
                     }).then(e=>{
                         setShowModal(false);
                         setReloading((v) => !v);
