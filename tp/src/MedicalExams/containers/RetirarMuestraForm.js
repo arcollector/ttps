@@ -62,6 +62,8 @@ export default function RetirarMuestraForm(props) {
                         idMedicExam1:arrayStates[0].idMedicExam,
                         idMedicExam2:arrayStates[1].idMedicExam,
                     }).then(e=>{
+                        setShowModal(false);
+                        setReloading((v) => !v);
                         Promise.all(
                             arrayStates.map(state=>{
                                 return db
@@ -72,8 +74,7 @@ export default function RetirarMuestraForm(props) {
                                     })
                             })
                         ).then(() => {
-                            setShowModal(false);
-                            setReloading((v) => !v);
+                            
                         });
                     })
                 };

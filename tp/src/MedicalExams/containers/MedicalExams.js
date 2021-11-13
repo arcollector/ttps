@@ -164,7 +164,7 @@ export function MedicalExams(props) {
 
 
  
-    console.log(filterStates);
+    
     return (
 
 
