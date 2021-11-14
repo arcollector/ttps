@@ -13,7 +13,7 @@ export function Host(props) {
         <Router>
             <Grid className="logged-layout">
                 <Grid.Row>
-                    <Grid.Column width={3}>
+                    <Grid.Column width={3} height={100}>
                         <SideBar user={user}/>
                     </Grid.Column>
                     <Grid.Column className="content" width={13}>
