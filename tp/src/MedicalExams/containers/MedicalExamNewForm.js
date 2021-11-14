@@ -37,6 +37,7 @@ export function MedicalExamNewForm(props) {
     const [doctorSelected, setDoctorSelected] = useState("");
     const [ insurers, setInsurers ] = React.useState([]);
     const [ patientInsurerName, setPacientInsurerName ] = React.useState('');
+    const [selected, setSelected] = useState("exoma");
 
     React.useEffect(() => {
         (async () => {
@@ -124,12 +125,14 @@ export function MedicalExamNewForm(props) {
                                 carrierSelected:seleccionado["carrier"],
                                 cariotipoSelected:seleccionado["cariotipo"],
                                 arraySelected:seleccionado["array"],
-                                price:presupuesto,
+                                price:prices[selected],
+                                examSelected:selected,
                                 fechaCompleta:date,
                                 day:day,
                                 month:month,
                                 year:year,
                                 idState:"",
+
     
     
                             }).then((e)=>{
@@ -137,7 +140,7 @@ export function MedicalExamNewForm(props) {
                                 console.log('por que no anda esto');
                                 MyDocument(idMedicExam);
                                 saveState("enviarPresupuesto", user.displayName, idMedicExam).then(idState=>{
-                                    console.log(idMedicExam);
+                                    
                                     var refMedicExam = db.collection('medicExams').doc(idMedicExam);
                                     refMedicExam.update({
                                         idState:idState
@@ -220,7 +223,7 @@ export function MedicalExamNewForm(props) {
 
 
     const calucularPresupuesto= (e)=>{
-        
+        setSelected(e.target.name);
         switch (e.target.name) {
             
             case "exoma":
@@ -407,39 +410,39 @@ export function MedicalExamNewForm(props) {
                     <Image avatar src={examen} />
                     <List.Content>
                         <List.Header as='a' name="exoma" onClick={calucularPresupuesto}>Exoma</List.Header>
-                        {seleccionado.exoma==="true"&&(<Icon name="chevron circle up"/>)}    
+                        {selected==="exoma"&&(<Icon name="chevron circle up"/>)}    
                     </List.Content>
                 </List.Item>
                 <List.Item>
                     <Image avatar src={examen2} />
                     <List.Content>
                         <List.Header as='a' name="genoma" onClick={calucularPresupuesto}>Genoma Mitocondrial Completo</List.Header>
-                        {seleccionado.genoma==="true"&&(<Icon name="chevron circle up"/>)} 
+                        {selected==="genoma"&&(<Icon name="chevron circle up"/>)} 
                     </List.Content>
                 </List.Item>
                 <List.Item>
                     <Image avatar src={examen3} />
                     <List.Content>
                         <List.Header as='a' name="carrier" onClick={calucularPresupuesto}>Carrier de Enfermedades Monogenicas</List.Header>
-                        {seleccionado.carrier==="true"&&(<Icon name="chevron circle up"/>)} 
+                        {selected==="carrier"&&(<Icon name="chevron circle up"/>)} 
                     </List.Content>
                 </List.Item>
                 <List.Item>
                     <Image avatar src={examen4} />
                     <List.Content>
                         <List.Header as='a' name="cariotipo" onClick={calucularPresupuesto}>Cariotipo</List.Header>
-                        {seleccionado.cariotipo==="true"&&(<Icon name="chevron circle up"/>)} 
+                        {selected==="cariotipo"&&(<Icon name="chevron circle up"/>)} 
                     </List.Content>
                 </List.Item>
                 <List.Item>
                     <Image avatar src={examen5} />
                     <List.Content>
                         <List.Header as='a' name="array" onClick={calucularPresupuesto}>Array CGH</List.Header>
-                        {seleccionado.array==="true"&&(<Icon name="chevron circle up"/>)} 
+                        {selected==="array"&&(<Icon name="chevron circle up"/>)} 
                     </List.Content>
                 </List.Item>
             </List>
-            <h2>Presupuesto: {presupuesto}</h2>
+            <h2>Presupuesto: {prices?prices[selected]:null}</h2>
             <Button type="submit" loading={isLoading}>Crear Estudio Medico</Button>
             
         </Form>

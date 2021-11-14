@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-
-
+import { Link } from 'react-router-dom';
+import { Icon, Button } from 'semantic-ui-react';
 import firebase from '../../shared/utils/Firebase';
 
 import 'firebase/compat/storage';
@@ -170,7 +170,7 @@ export function MedicalExams(props) {
 
         <div className="estudios-content">
 
-                <select name="estado" onChange={viewOnChange} multiple="" class="ui fluid dropdown">
+                <select name="estado" onChange={viewOnChange} multiple="" className="ui fluid dropdown">
                 <option value="todos">Todos</option>
                 <option value="enviarPresupuesto">Estudios sin presupuesto enviado</option>
                 <option value="esperandoComprobante">Estudios sin recibir comprobante de pago</option>
@@ -212,7 +212,21 @@ export function MedicalExams(props) {
                                             {(viewFilter.estado===exams||viewFilter.estado==="todos") && <div className="contenedor-tarjeta">
                                                 <div className="ui card">
                                                         
-                                                            {patients &&<div className="header">{patients[exam.idPatient].nombreCompleto}</div>}
+                                                            {patients &&<div className="header">{patients[exam.idPatient].nombreCompleto}  
+                                                            
+                                                                    <Button
+                                                                        as={Link}
+                                                                        primary
+                                                                        size="mini"
+                                                                        to={`/exam/${exam.id}`}
+                                                                    >
+                                                                        <Icon name="eye" />
+                                                                        Ver Detalles
+                                                                    </Button>
+                                                            
+                                                            
+                                                            
+                                                            </div>}
                                                         
                                                         
                                                         <div className="content">

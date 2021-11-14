@@ -5,6 +5,7 @@ import { MedicalExams } from '../../../MedicalExams';
 import { Patients } from '../../../Patients';
 import { Lotes } from '../../../Lotes';
 import { Insurers } from '../../../Insurers';
+import Exam from '../../../MedicalExams/containers/Exam';
 
 export function Routes(props) {
     const {user}=props
@@ -12,6 +13,10 @@ export function Routes(props) {
         <Switch>
             <Route path="/estudios" exact>
                 <MedicalExams user={user}/>
+            </Route>
+
+            <Route path="/exam/:id" exact>
+                <Exam />
             </Route>
 
             <Route path="/turnos" exact>
