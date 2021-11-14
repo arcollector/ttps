@@ -109,7 +109,9 @@ export function MedicalExamNewForm(props) {
                         
                         let  today = new Date(),
                         date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
-                        
+                        let day=today.getDate();
+                        let month=today.getUTCMonth()+1;
+                        let year=today.getFullYear();
                             
                             db.collection("medicExams").add({
                                 
@@ -124,9 +126,9 @@ export function MedicalExamNewForm(props) {
                                 arraySelected:seleccionado["array"],
                                 price:presupuesto,
                                 fechaCompleta:date,
-                                day:today.getDay(),
-                                month:today.getMonth(),
-                                year:today.getFullYear(),
+                                day:day,
+                                month:month,
+                                year:year,
                                 idState:"",
     
     

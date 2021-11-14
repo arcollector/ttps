@@ -74,15 +74,15 @@ export default function RetirarMuestraForm(props) {
                                         idLote:e.id
                                     })
                             })
-                        ).then(() => {
-                            
-                        });
+                        )
                     })
                 };
             })
 
 
         });
+        setShowModal(false);
+        setReloading((v) => !v);
     }
 
 
